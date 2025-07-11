@@ -24,6 +24,7 @@ import {
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
 import Settings from './Settings';
+import UserManagement from './UserManagement';
 
 interface MenuItem {
   id: string;
@@ -42,7 +43,7 @@ const Dashboard: React.FC = () => {
   const menuItems: MenuItem[] = [
     { id: 'dashboard', name: 'Tableau de bord', icon: BarChart3 },
     { id: 'tasks', name: 'Gestion des tâches', icon: CheckSquare },
-    { id: 'users', name: 'Utilisateurs', icon: Users },
+    { id: 'users', name: 'Gestion des utilisateurs', icon: Users },
     { id: 'orders', name: 'Commandes', icon: Package },
     { id: 'clients', name: 'Clients', icon: Users },
     { id: 'products', name: 'Produits', icon: ShoppingCart },
@@ -202,6 +203,13 @@ const Dashboard: React.FC = () => {
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Paramètres</h2>
               <Settings />
             </div>
+          </div>
+        );
+
+      case 'users':
+        return (
+          <div className="space-y-6">
+            <UserManagement />
           </div>
         );
 

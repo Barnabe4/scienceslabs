@@ -21,6 +21,10 @@ import { DashboardProvider } from './context/DashboardContext';
 import { OrderProvider } from './context/OrderContext';
 import { SettingsProvider } from './context/SettingsContext';
 import OrderManagement from './pages/OrderManagement';
+import UserManagement from './pages/UserManagement';
+import AddUser from './pages/AddUser';
+import EditUser from './pages/EditUser';
+import RoleManagement from './pages/RoleManagement';
 
 function App() {
   return (
@@ -48,6 +52,10 @@ function App() {
                         <Route path="/gestion-commandes" element={<OrderManagement />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/admin/utilisateurs" element={<UserManagement />} />
+                        <Route path="/admin/utilisateurs/ajouter" element={<AddUser />} />
+                        <Route path="/admin/utilisateurs/:id/editer" element={<EditUser />} />
+                        <Route path="/admin/roles" element={<RoleManagement />} />
                       </Routes>
                     </main>
                     <Footer />
