@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau de bord - E-commerce Livres Religieux</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f6f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .chart-container {
+      position: relative;
+      height: 200px;
+    }
+    .small-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .metric {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .label {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tableau de bord - Vente de livres religieux</h1>
+  <div class="dashboard">
+    <div class="card">
+      <h3>Répartition des ventes</h3>
+      <canvas id="salesChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Marge brute</h3>
+      <canvas id="profitChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Taux de conversion</h3>
+      <canvas id="conversionChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Abandon de panier</h3>
+      <div class="chart-container">
+        <canvas id="cartAbandonChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Taille des commandes</h3>
+      <canvas id="orderSizeChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Trafic du site</h3>
+      <canvas id="siteTrafficChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Nombre de transactions</h3>
+      <canvas id="transactionsChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Chiffre d'affaires</h3>
+      <div class="small-card">
+        <div>
+          <div class="label">Mois actuel</div>
+          <div class="metric">4800 €</div>
+        </div>
+        <div>
+          <div class="label">Mois précédent</div>
+          <div class="metric">3500 €</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Acquisition de clients</h3>
+      <ul>
+        <li>📘 Livres : <strong>7465</strong></li>
+        <li>🎁 Accessoires : <strong>5690</strong></li>
+        <li>🔔 Autres : <strong>153</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    new Chart(document.getElementById('salesChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Livres de prière', 'Accessoires religieux', 'CD/Audio', 'Objets liturgiques'],
+        datasets: [{
+          data: [34, 27, 22, 17],
+          backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e67e22']
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('profitChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Marge brute', 'Autres'],
+        datasets: [{
+          data: [65, 35],
+          backgroundColor: ['#f39c12', '#ecf0f1']
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('conversionChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil'],
+        datasets: [{
+          label: 'Clients acquis',
+          data: [120, 180, 130, 145, 90, 155, 120],
+          backgroundColor: '#3498db',
+          borderColor: '#2980b9',
+          fill: true
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('cartAbandonChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Livres', 'Accessoires'],
+        datasets: [{
+          label: 'Abandon de panier %',
+          data: [76, 65],
+          backgroundColor: ['#f1c40f', '#3498db']
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('orderSizeChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil'],
+        datasets: [{
+          label: 'Commandes',
+          data: [100, 150, 200, 180, 120, 250, 240],
+          borderColor: '#8e44ad',
+          fill: false
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('siteTrafficChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil'],
+        datasets: [{
+          label: 'Visites',
+          data: [100, 180, 150, 160, 170, 250, 300],
+          borderColor: '#27ae60',
+          fill: true
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('transactionsChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+        datasets: [
+          {
+            label: 'Livres',
+            data: [80, 100, 60, 130, 90, 120],
+            backgroundColor: '#3498db'
+          },
+          {
+            label: 'Accessoires',
+            data: [40, 60, 30, 90, 60, 100],
+            backgroundColor: '#2ecc71'
+          },
+          {
+            label: 'Autres',
+            data: [30, 50, 20, 70, 40, 80],
+            backgroundColor: '#f1c40f'
+          }
+        ]
+      }
+    });
+  </script>
+</body>
+</html>
