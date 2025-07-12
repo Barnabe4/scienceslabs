@@ -25,6 +25,9 @@ import UserManagement from './pages/UserManagement';
 import AddUser from './pages/AddUser';
 import EditUser from './pages/EditUser';
 import RoleManagement from './pages/RoleManagement';
+import ClientManagement from './pages/ClientManagement';
+import AddClient from './pages/AddClient';
+import ClientProfile from './pages/ClientProfile';
 
 function App() {
   return (
@@ -56,6 +59,9 @@ function App() {
                         <Route path="/admin/utilisateurs/ajouter" element={<AddUser />} />
                         <Route path="/admin/utilisateurs/:id/editer" element={<EditUser />} />
                         <Route path="/admin/roles" element={<RoleManagement />} />
+                        <Route path="/admin/clients" element={<ClientManagement />} />
+                        <Route path="/admin/clients/ajouter" element={<AddClient />} />
+                        <Route path="/admin/clients/:id/fiche" element={<ClientProfile />} />
                       </Routes>
                     </main>
                     <Footer />

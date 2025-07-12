@@ -24,6 +24,7 @@ import {
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
 import Settings from './Settings';
+import ClientManagement from './pages/ClientManagement';
 import UserManagement from './UserManagement';
 
 interface MenuItem {
@@ -210,6 +211,13 @@ const Dashboard: React.FC = () => {
         return (
           <div className="space-y-6">
             <UserManagement />
+          </div>
+        );
+
+      case 'clients':
+        return (
+          <div className="space-y-6">
+            <ClientManagement />
           </div>
         );
 
