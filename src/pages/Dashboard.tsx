@@ -24,7 +24,7 @@ import {
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
 import Settings from './Settings';
-import ClientManagement from './pages/ClientManagement';
+import ClientManagement from './ClientManagement';
 import UserManagement from './UserManagement';
 
 interface MenuItem {
