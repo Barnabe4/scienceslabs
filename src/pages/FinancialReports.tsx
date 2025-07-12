@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  FileText, Download, Printer, Calendar, BarChart3, 
-  PieChart, TrendingUp, DollarSign, ArrowRight, ChevronDown,
-  FileSpreadsheet, FilePdf, Mail
-} from 'lucide-react';
+import { FileText, Download, Printer, Calendar, BarChart3, PieChart, TrendingUp, DollarSign, ArrowRight, ChevronDown, FileSpreadsheet, File as FilePdf, Mail } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
 import { 
   SalesChart, 
