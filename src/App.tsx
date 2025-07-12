@@ -31,7 +31,6 @@ import ClientProfile from './pages/ClientProfile';
 import ProductManagement from './pages/ProductManagement';
 import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
-import EditProduct from './pages/EditProduct';
 import CategoryManagement from './pages/CategoryManagement';
 import Finance from './pages/Finance';
 import FinancialDashboard from './pages/FinancialDashboard';
