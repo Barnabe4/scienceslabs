@@ -185,7 +185,7 @@ const ClientManagement = () => {
       rating: 3,
       notes: 'Client inactif depuis 3 mois'
     }
-  ];
+  ]);
 
   const clientTypes = [
     { id: 'all', name: 'Tous les types', icon: Users },
