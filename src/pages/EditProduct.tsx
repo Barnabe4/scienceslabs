@@ -1,0 +1,685 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Save, Package, Image, DollarSign, Tag, AlertTriangle, Plus, X, Trash2 } from 'lucide-react';
+
+const EditProduct = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    name: '',
+    model: '',
+    description: '',
+    category: '',
+    subCategory: '',
+    sku: '',
+    brand: '',
+    priceHT: 0,
+    tva: 18,
+    stock: 0,
+    stockAlert: 0,
+    status: 'active',
+    images: [] as string[],
+    specifications: {} as Record<string, string>
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [newSpecKey, setNewSpecKey] = useState('');
+  const [newSpecValue, setNewSpecValue] = useState('');
+
+  const categories = [
+    { 
+      id: 'chemistry', 
+      name: 'Équipement de Chimie',
+      subCategories: [
+        { id: 'glassware', name: 'Verreries' },
+        { id: 'beakers', name: 'Béchers' },
+        { id: 'volumetric-flasks', name: 'Fioles jaugées' },
+        { id: 'erlenmeyers', name: 'Erlenmeyers' },
+        { id: 'test-tubes', name: 'Tubes à essai' },
+        { id: 'burettes', name: 'Burettes et Pipettes' },
+        { id: 'balances', name: 'Balances de précision' },
+        { id: 'heating', name: 'Matériel de chauffage' }
+      ]
+    },
+    { 
+      id: 'reagents', 
+      name: 'Réactifs',
+      subCategories: [
+        { id: 'fehling', name: 'Liqueur de Fehling' },
+        { id: 'schiff', name: 'Réactif de Schiff' },
+        { id: 'acids', name: 'Acides' },
+        { id: 'bases', name: 'Bases' },
+        { id: 'salts', name: 'Sels' },
+        { id: 'indicators', name: 'Indicateurs colorés' },
+        { id: 'organic', name: 'Réactifs organiques' },
+        { id: 'inorganic', name: 'Réactifs inorganiques' }
+      ]
+    },
+    { 
+      id: 'physics', 
+      name: 'Équipement de Physique',
+      subCategories: [
+        { id: 'oscilloscopes', name: 'Oscilloscopes' },
+        { id: 'generators', name: 'Générateurs' },
+        { id: 'mechanics', name: 'Mécanique' },
+        { id: 'electricity', name: 'Électricité' },
+        { id: 'optics', name: 'Optique' },
+        { id: 'thermodynamics', name: 'Thermodynamique' },
+        { id: 'magnetism', name: 'Magnétisme' },
+        { id: 'waves', name: 'Ondes et vibrations' }
+      ]
+    },
+    { 
+      id: 'biology', 
+      name: 'Équipement de SVT',
+      subCategories: [
+        { id: 'microscopes', name: 'Microscopes' },
+        { id: 'petri-dishes', name: 'Boîtes de Pétri' },
+        { id: 'models', name: 'Modèles anatomiques' },
+        { id: 'specimens', name: 'Échantillons' },
+        { id: 'dissection', name: 'Matériel de dissection' },
+        { id: 'culture', name: 'Matériel de culture' },
+        { id: 'observation', name: 'Matériel d\'observation' }
+      ]
+    },
+    { 
+      id: 'safety', 
+      name: 'Équipement de Sécurité',
+      subCategories: [
+        { id: 'lab-coats', name: 'Blouses de laboratoire' },
+        { id: 'gloves', name: 'Gants de protection' },
+        { id: 'safety-glasses', name: 'Lunettes de sécurité' },
+        { id: 'ppe', name: 'EPI complets' },
+        { id: 'showers', name: 'Douches de sécurité' },
+        { id: 'extinguishers', name: 'Extincteurs' },
+        { id: 'storage', name: 'Armoires de sécurité' },
+        { id: 'ventilation', name: 'Systèmes de ventilation' }
+      ]
+    },
+    { 
+      id: 'furniture', 
+      name: 'Mobilier de laboratoire',
+      subCategories: [
+        { id: 'benches', name: 'Paillasses' },
+        { id: 'stools', name: 'Tabourets' },
+        { id: 'cabinets', name: 'Armoires' },
+        { id: 'fume-hoods', name: 'Hottes aspirantes' },
+        { id: 'tables', name: 'Tables de laboratoire' },
+        { id: 'chairs', name: 'Chaises ergonomiques' },
+        { id: 'storage-units', name: 'Unités de rangement' }
+      ]
+    },
+    { 
+      id: 'training', 
+      name: 'Formations & Accompagnement',
+      subCategories: [
+        { id: 'safety-training', name: 'Formation sécurité' },
+        { id: 'equipment-training', name: 'Formation équipements' },
+        { id: 'maintenance', name: 'Formation maintenance' },
+        { id: 'consulting', name: 'Conseil pédagogique' },
+        { id: 'installation', name: 'Installation et mise en service' }
+      ]
+    },
+    { 
+      id: 'miscellaneous', 
+      name: 'Divers',
+      subCategories: [
+        { id: 'consumables', name: 'Consommables' },
+        { id: 'spare-parts', name: 'Pièces de rechange' },
+        { id: 'cleaning', name: 'Produits de nettoyage' },
+        { id: 'documentation', name: 'Documentation technique' },
+        { id: 'software', name: 'Logiciels spécialisés' }
+      ]
+    }
+  ];
+
+  // Simulation de chargement des données produit
+  useEffect(() => {
+    const loadProduct = async () => {
+      setLoading(true);
+      // Simulation d'appel API
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Données simulées basées sur l'ID
+      const productData = {
+        name: 'Bécher en Verre Borosilicate',
+        model: 'BCH-050',
+        description: 'Bécher gradué en verre borosilicate résistant aux chocs thermiques',
+        category: 'chemistry',
+        subCategory: 'beakers',
+        sku: 'BCH-050-SL',
+        brand: 'Sciences Labs',
+        priceHT: 7203,
+        tva: 18,
+        stock: 25,
+        stockAlert: 10,
+        status: 'active',
+        images: ['https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=400'],
+        specifications: {
+          'Matériau': 'Verre borosilicate 3.3',
+          'Capacité': '50ml',
+          'Graduation': 'Graduations permanentes',
+          'Température max': '500°C'
+        }
+      };
+      
+      setFormData(prev => ({ ...prev, ...productData }));
+      setLoading(false);
+    };
+
+    loadProduct();
+  }, [id]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    if (type === 'number') {
+      setFormData(prev => ({ ...prev, [name]: parseFloat(value) || 0 }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleCategoryChange = (categoryId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      category: categoryId,
+      subCategory: ''
+    }));
+  };
+
+  const calculatePriceTTC = () => {
+    return formData.priceHT * (1 + formData.tva / 100);
+  };
+
+  const addSpecification = () => {
+    if (newSpecKey.trim() && newSpecValue.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        specifications: {
+          ...prev.specifications,
+          [newSpecKey]: newSpecValue
+        }
+      }));
+      setNewSpecKey('');
+      setNewSpecValue('');
+    }
+  };
+
+  const removeSpecification = (key: string) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: Object.fromEntries(
+        Object.entries(prev.specifications).filter(([k]) => k !== key)
+      )
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Le nom est requis';
+    }
+
+    if (!formData.category) {
+      newErrors.category = 'La catégorie est requise';
+    }
+
+    if (!formData.sku.trim()) {
+      newErrors.sku = 'Le SKU est requis';
+    }
+
+    if (formData.priceHT <= 0) {
+      newErrors.priceHT = 'Le prix HT doit être supérieur à 0';
+    }
+
+    if (formData.stock < 0) {
+      newErrors.stock = 'Le stock ne peut pas être négatif';
+    }
+
+    if (formData.stockAlert < 0) {
+      newErrors.stockAlert = 'Le seuil d\'alerte ne peut pas être négatif';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    // Simulation de mise à jour
+    console.log('Mise à jour produit:', formData);
+    
+    // Redirection vers la liste des produits
+    navigate('/admin/produits');
+  };
+
+  const handleDelete = () => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible.')) {
+      // Simulation de suppression
+      console.log('Suppression produit:', id);
+      navigate('/admin/produits');
+    }
+  };
+
+  const selectedCategory = categories.find(c => c.id === formData.category);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Link
+            to="/admin/produits"
+            className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Retour
+          </Link>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Modifier le produit</h1>
+            <p className="text-gray-600">Mettre à jour les informations du produit</p>
+          </div>
+        </div>
+        <button
+          onClick={handleDelete}
+          className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+        >
+          <Trash2 className="w-4 h-4 mr-2" />
+          Supprimer
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Informations générales */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                <Package className="w-5 h-5 mr-2" />
+                Informations générales
+              </h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom du produit *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.name ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Ex: Bécher en Verre Borosilicate"
+                  />
+                  {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Modèle
+                  </label>
+                  <input
+                    type="text"
+                    name="model"
+                    value={formData.model}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ex: BCH-050"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    SKU *
+                  </label>
+                  <input
+                    type="text"
+                    name="sku"
+                    value={formData.sku}
+                    onChange={handleInputChange}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.sku ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Ex: BCH-050-SL"
+                  />
+                  {errors.sku && <p className="text-red-500 text-sm mt-1">{errors.sku}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Marque
+                  </label>
+                  <input
+                    type="text"
+                    name="brand"
+                    value={formData.brand}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ex: Sciences Labs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Statut
+                  </label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="active">Actif</option>
+                    <option value="inactive">Inactif</option>
+                    <option value="discontinued">Discontinué</option>
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Description détaillée du produit..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Catégories */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                <Tag className="w-5 h-5 mr-2" />
+                Catégories
+              </h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Catégorie principale *
+                  </label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.category ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                  >
+                    <option value="">Sélectionner une catégorie</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>{category.name}</option>
+                    ))}
+                  </select>
+                  {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Sous-catégorie
+                  </label>
+                  <select
+                    name="subCategory"
+                    value={formData.subCategory}
+                    onChange={handleInputChange}
+                    disabled={!selectedCategory}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                  >
+                    <option value="">Sélectionner une sous-catégorie</option>
+                    {selectedCategory?.subCategories.map(subCat => (
+                      <option key={subCat.id} value={subCat.id}>{subCat.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Spécifications */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6">Spécifications techniques</h2>
+              
+              <div className="space-y-4">
+                {Object.entries(formData.specifications).map(([key, value]) => (
+                  <div key={key} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-900">{key}:</span>
+                      <span className="ml-2 text-gray-700">{value}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeSpecification(key)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input
+                    type="text"
+                    value={newSpecKey}
+                    onChange={(e) => setNewSpecKey(e.target.value)}
+                    placeholder="Nom de la spécification"
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <input
+                    type="text"
+                    value={newSpecValue}
+                    onChange={(e) => setNewSpecValue(e.target.value)}
+                    placeholder="Valeur"
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={addSpecification}
+                    className="flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Ajouter
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Prix et stock */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                <DollarSign className="w-5 h-5 mr-2" />
+                Prix et TVA
+              </h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Prix HT (FCFA) *
+                  </label>
+                  <input
+                    type="number"
+                    name="priceHT"
+                    value={formData.priceHT}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="0.01"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.priceHT ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="0"
+                  />
+                  {errors.priceHT && <p className="text-red-500 text-sm mt-1">{errors.priceHT}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    TVA (%)
+                  </label>
+                  <select
+                    name="tva"
+                    value={formData.tva}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value={0}>0% (Exonéré)</option>
+                    <option value={18}>18% (Standard)</option>
+                  </select>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="text-sm text-blue-800">
+                    <div className="font-medium">Prix TTC calculé:</div>
+                    <div className="text-lg font-bold">
+                      {calculatePriceTTC().toLocaleString('fr-FR')} FCFA
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                <AlertTriangle className="w-5 h-5 mr-2" />
+                Gestion du stock
+              </h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Stock actuel
+                  </label>
+                  <input
+                    type="number"
+                    name="stock"
+                    value={formData.stock}
+                    onChange={handleInputChange}
+                    min="0"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.stock ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="0"
+                  />
+                  {errors.stock && <p className="text-red-500 text-sm mt-1">{errors.stock}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Seuil d'alerte
+                  </label>
+                  <input
+                    type="number"
+                    name="stockAlert"
+                    value={formData.stockAlert}
+                    onChange={handleInputChange}
+                    min="0"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      errors.stockAlert ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="0"
+                  />
+                  {errors.stockAlert && <p className="text-red-500 text-sm mt-1">{errors.stockAlert}</p>}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Alerte quand le stock atteint ce niveau
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                <Image className="w-5 h-5 mr-2" />
+                Images
+              </h2>
+              
+              <div className="space-y-4">
+                {formData.images.length > 0 && (
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    {formData.images.map((image, index) => (
+                      <div key={index} className="relative">
+                        <img 
+                          src={image} 
+                          alt={`${formData.name} - ${index + 1}`} 
+                          className="w-full h-32 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({
+                            ...prev,
+                            images: prev.images.filter((_, i) => i !== index)
+                          }))}
+                          className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <Image className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-2">Glissez vos images ici</p>
+                  <button
+                    type="button"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  >
+                    Choisir des fichiers
+                  </button>
+                  <p className="text-xs text-gray-500 mt-2">
+                    PNG, JPG jusqu'à 5MB chacune
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+          <Link
+            to="/admin/produits"
+            className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            Annuler
+          </Link>
+          <button
+            type="submit"
+            className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Enregistrer les modifications
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default EditProduct;

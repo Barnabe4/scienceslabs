@@ -26,6 +26,7 @@ import OrderManagement from './OrderManagement';
 import Settings from './Settings';
 import ClientManagement from './ClientManagement';
 import UserManagement from './UserManagement';
+import ProductManagement from './ProductManagement';
 
 interface MenuItem {
   id: string;
@@ -218,6 +219,13 @@ const Dashboard: React.FC = () => {
         return (
           <div className="space-y-6">
             <ClientManagement />
+          </div>
+        );
+        
+      case 'products':
+        return (
+          <div className="space-y-6">
+            <ProductManagement />
           </div>
         );
 

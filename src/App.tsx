@@ -28,6 +28,10 @@ import RoleManagement from './pages/RoleManagement';
 import ClientManagement from './pages/ClientManagement';
 import AddClient from './pages/AddClient';
 import ClientProfile from './pages/ClientProfile';
+import ProductManagement from './pages/ProductManagement';
+import AddProduct from './pages/AddProduct';
+import EditProduct from './pages/EditProduct';
+import CategoryManagement from './pages/CategoryManagement';
 
 function App() {
   return (
@@ -62,6 +66,10 @@ function App() {
                         <Route path="/admin/clients" element={<ClientManagement />} />
                         <Route path="/admin/clients/ajouter" element={<AddClient />} />
                         <Route path="/admin/clients/:id/fiche" element={<ClientProfile />} />
+                        <Route path="/admin/produits" element={<ProductManagement />} />
+                        <Route path="/admin/produits/ajouter" element={<AddProduct />} />
+                        <Route path="/admin/produits/:id/editer" element={<EditProduct />} />
+                        <Route path="/admin/categories" element={<CategoryManagement />} />
                       </Routes>
                     </main>
                     <Footer />
