@@ -32,6 +32,7 @@ import ProductManagement from './pages/ProductManagement';
 import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
 import CategoryManagement from './pages/CategoryManagement';
+import ProductPreview from './pages/ProductPreview';
 import Finance from './pages/Finance';
 import FinancialDashboard from './pages/FinancialDashboard';
 import RevenueManagement from './pages/RevenueManagement';
@@ -76,6 +77,7 @@ function App() {
                         <Route path="/admin/produits" element={<ProductManagement />} />
                         <Route path="/admin/produits/ajouter" element={<AddProduct />} />
                         <Route path="/admin/produits/:id/editer" element={<EditProduct />} />
+                        <Route path="/admin/produits/:id/preview" element={<ProductPreview />} />
                         <Route path="/admin/categories" element={<CategoryManagement />} />
                         <Route path="/finance" element={<Finance />} />
                         <Route path="/finance/dashboard" element={<FinancialDashboard />} />

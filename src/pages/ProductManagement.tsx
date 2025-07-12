@@ -450,7 +450,7 @@ const ProductManagement = () => {
             {selectedProducts.length > 0 && (
               <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors">
                 Actions groupées
-              </button>
+              </Link>
             )}
           </div>
         </div>
@@ -601,7 +601,7 @@ const ProductManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => navigate(`/admin/produits/${product.id}`)}
+                          onClick={() => navigate(`/admin/produits/${product.id}/preview`)}
                           className="text-blue-600 hover:text-blue-900"
                           title="Voir détails"
                         >
