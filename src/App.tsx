@@ -31,7 +31,15 @@ import ClientProfile from './pages/ClientProfile';
 import ProductManagement from './pages/ProductManagement';
 import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
+import EditProduct from './pages/EditProduct';
 import CategoryManagement from './pages/CategoryManagement';
+import Finance from './pages/Finance';
+import FinancialDashboard from './pages/FinancialDashboard';
+import RevenueManagement from './pages/RevenueManagement';
+import ExpenseManagement from './pages/ExpenseManagement';
+import InvoiceManagement from './pages/InvoiceManagement';
+import FinancialReports from './pages/FinancialReports';
+import FinancialSettings from './pages/FinancialSettings';
 
 function App() {
   return (
@@ -70,6 +78,13 @@ function App() {
                         <Route path="/admin/produits/ajouter" element={<AddProduct />} />
                         <Route path="/admin/produits/:id/editer" element={<EditProduct />} />
                         <Route path="/admin/categories" element={<CategoryManagement />} />
+                        <Route path="/finance" element={<Finance />} />
+                        <Route path="/finance/dashboard" element={<FinancialDashboard />} />
+                        <Route path="/finance/revenus" element={<RevenueManagement />} />
+                        <Route path="/finance/depenses" element={<ExpenseManagement />} />
+                        <Route path="/finance/factures" element={<InvoiceManagement />} />
+                        <Route path="/finance/rapports" element={<FinancialReports />} />
+                        <Route path="/finance/parametres" element={<FinancialSettings />} />
                       </Routes>
                     </main>
                     <Footer />

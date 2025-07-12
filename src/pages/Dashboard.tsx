@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useDashboard } from '../context/DashboardContext';
 import { useOrders } from '../context/OrderContext';
-import { useSettings } from '../context/SettingsContext';
 import { 
   BarChart3, 
   CheckSquare, 
@@ -27,6 +26,7 @@ import Settings from './Settings';
 import ClientManagement from './ClientManagement';
 import UserManagement from './UserManagement';
 import ProductManagement from './ProductManagement';
+import Finance from './Finance';
 
 interface MenuItem {
   id: string;
@@ -38,7 +38,6 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { stats } = useDashboard();
   const { orders, stats: orderStats } = useOrders();
-  const { settings } = useSettings();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedPeriod, setSelectedPeriod] = useState('Hier');
 
@@ -49,7 +48,7 @@ const Dashboard: React.FC = () => {
     { id: 'orders', name: 'Commandes', icon: Package },
     { id: 'clients', name: 'Clients', icon: Users },
     { id: 'products', name: 'Produits', icon: ShoppingCart },
-    { id: 'finances', name: 'Finances', icon: DollarSign },
+    { id: 'finance', name: 'Finances', icon: DollarSign },
     { id: 'reports', name: 'Rapports', icon: FileText },
     { id: 'settings', name: 'Paramètres', icon: SettingsIcon },
   ];
@@ -227,6 +226,13 @@ const Dashboard: React.FC = () => {
           <div className="space-y-6">
             <ProductManagement />
           </div>
+      );
+      
+      case 'finance':
+        return (
+        <div className="space-y-6">
+          <Finance />
+        </div>
         );
 
       default:
