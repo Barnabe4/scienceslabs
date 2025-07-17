@@ -1,106 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useCategories } from '../context/CategoryContext';
 import { 
   Tag, Plus, Edit, Trash2, ChevronDown, ChevronRight, 
   ArrowLeft, Save, X, Package, AlertTriangle
 } from 'lucide-react';
 
-interface SubCategory {
-  id: string;
-  name: string;
-  description: string;
-  productCount: number;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  subCategories: SubCategory[];
-  productCount: number;
-  isExpanded?: boolean;
-}
-
 const CategoryManagement = () => {
-  const [categories, setCategories] = useState<Category[]>([
-    {
-      id: 'chemistry',
-      name: 'Équipement de Chimie',
-      description: 'Matériel de laboratoire pour expériences chimiques',
-      icon: '🧪',
-      productCount: 45,
-      subCategories: [
-        { id: 'glassware', name: 'Verreries', description: 'Verreries diverses pour laboratoire', productCount: 12 },
-        { id: 'beakers', name: 'Béchers', description: 'Béchers de différentes tailles', productCount: 8 },
-        { id: 'volumetric-flasks', name: 'Fioles jaugées', description: 'Fioles jaugées de précision', productCount: 6 },
-        { id: 'erlenmeyers', name: 'Erlenmeyers', description: 'Erlenmeyers de différentes tailles', productCount: 5 },
-        { id: 'test-tubes', name: 'Tubes à essai', description: 'Tubes à essai en verre', productCount: 4 },
-        { id: 'burettes', name: 'Burettes et Pipettes', description: 'Instruments de mesure volumétrique', productCount: 7 },
-        { id: 'balances', name: 'Balances de précision', description: 'Balances électroniques de précision', productCount: 3 }
-      ],
-      isExpanded: true
-    },
-    {
-      id: 'reagents',
-      name: 'Réactifs',
-      description: 'Produits chimiques pour expériences',
-      icon: '⚗️',
-      productCount: 32,
-      subCategories: [
-        { id: 'fehling', name: 'Liqueur de Fehling', description: 'Pour tests de sucres réducteurs', productCount: 2 },
-        { id: 'schiff', name: 'Réactif de Schiff', description: 'Pour détection des aldéhydes', productCount: 1 },
-        { id: 'acids', name: 'Acides', description: 'Acides pour laboratoire', productCount: 8 },
-        { id: 'bases', name: 'Bases', description: 'Bases pour laboratoire', productCount: 6 },
-        { id: 'salts', name: 'Sels', description: 'Sels minéraux divers', productCount: 10 },
-        { id: 'indicators', name: 'Indicateurs colorés', description: 'Indicateurs de pH', productCount: 5 }
-      ]
-    },
-    {
-      id: 'physics',
-      name: 'Équipement de Physique',
-      description: 'Matériel pour expériences de physique',
-      icon: '⚡',
-      productCount: 28,
-      subCategories: [
-        { id: 'oscilloscopes', name: 'Oscilloscopes', description: 'Pour visualisation de signaux électriques', productCount: 3 },
-        { id: 'generators', name: 'Générateurs', description: 'Générateurs de fonctions et de signaux', productCount: 4 },
-        { id: 'mechanics', name: 'Mécanique', description: 'Équipements pour expériences de mécanique', productCount: 8 },
-        { id: 'electricity', name: 'Électricité', description: 'Matériel pour circuits électriques', productCount: 7 },
-        { id: 'optics', name: 'Optique', description: 'Équipements pour expériences d\'optique', productCount: 6 }
-      ]
-    },
-    {
-      id: 'biology',
-      name: 'Équipement de SVT',
-      description: 'Matériel pour biologie et sciences naturelles',
-      icon: '🔬',
-      productCount: 35,
-      subCategories: [
-        { id: 'microscopes', name: 'Microscopes', description: 'Microscopes optiques et numériques', productCount: 8 },
-        { id: 'petri-dishes', name: 'Boîtes de Pétri', description: 'Pour cultures microbiologiques', productCount: 4 },
-        { id: 'models', name: 'Modèles anatomiques', description: 'Modèles du corps humain et animal', productCount: 12 },
-        { id: 'specimens', name: 'Échantillons', description: 'Spécimens conservés pour observation', productCount: 6 },
-        { id: 'dissection', name: 'Matériel de dissection', description: 'Instruments pour dissection', productCount: 5 }
-      ]
-    },
-    {
-      id: 'safety',
-      name: 'Équipement de Sécurité',
-      description: 'Matériel de protection et sécurité',
-      icon: '🛡️',
-      productCount: 22,
-      subCategories: [
-        { id: 'lab-coats', name: 'Blouses de laboratoire', description: 'Protection vestimentaire', productCount: 5 },
-        { id: 'gloves', name: 'Gants de protection', description: 'Protection des mains', productCount: 4 },
-        { id: 'safety-glasses', name: 'Lunettes de sécurité', description: 'Protection des yeux', productCount: 3 },
-        { id: 'ppe', name: 'EPI complets', description: 'Équipements de protection individuelle', productCount: 2 },
-        { id: 'showers', name: 'Douches de sécurité', description: 'Pour décontamination d\'urgence', productCount: 1 },
-        { id: 'extinguishers', name: 'Extincteurs', description: 'Lutte contre incendie', productCount: 3 },
-        { id: 'storage', name: 'Armoires de sécurité', description: 'Stockage sécurisé de produits dangereux', productCount: 4 }
-      ]
-    }
-  ]);
+  const {
+    categories,
+    addCategory,
+    updateCategory,
+    deleteCategory,
+    addSubCategory,
+    updateSubCategory,
+    deleteSubCategory,
+    toggleCategoryExpansion
+  } = useCategories();
 
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddSubCategory, setShowAddSubCategory] = useState<string | null>(null);
@@ -118,27 +34,15 @@ const CategoryManagement = () => {
     description: ''
   });
 
-  const toggleCategoryExpansion = (categoryId: string) => {
-    setCategories(prev => prev.map(cat => 
-      cat.id === categoryId ? { ...cat, isExpanded: !cat.isExpanded } : cat
-    ));
-  };
-
   const handleAddCategory = () => {
     if (!newCategory.name.trim()) return;
 
-    const categoryId = newCategory.name.toLowerCase().replace(/\s+/g, '-');
-    const newCat: Category = {
-      id: categoryId,
+    addCategory({
       name: newCategory.name,
       description: newCategory.description,
-      icon: newCategory.icon,
-      productCount: 0,
-      subCategories: [],
-      isExpanded: true
-    };
-
-    setCategories(prev => [...prev, newCat]);
+      icon: newCategory.icon
+    });
+    
     setNewCategory({ name: '', description: '', icon: '🔬' });
     setShowAddCategory(false);
     alert('Catégorie créée avec succès !');
@@ -147,51 +51,37 @@ const CategoryManagement = () => {
   const handleAddSubCategory = (categoryId: string) => {
     if (!newSubCategory.name.trim()) return;
 
-    const subCategoryId = newSubCategory.name.toLowerCase().replace(/\s+/g, '-');
-    const newSubCat: SubCategory = {
-      id: subCategoryId,
+    addSubCategory(categoryId, {
       name: newSubCategory.name,
-      description: newSubCategory.description,
-      productCount: 0
-    };
-
-    setCategories(prev => prev.map(cat => 
-      cat.id === categoryId 
-        ? { ...cat, subCategories: [...cat.subCategories, newSubCat] }
-        : cat
-    ));
+      description: newSubCategory.description
+    });
+    
     setNewSubCategory({ name: '', description: '' });
     setShowAddSubCategory(null);
+    alert('Sous-catégorie créée avec succès !');
   };
 
   const handleUpdateCategory = (categoryId: string) => {
-    const category = categories.find(cat => cat.id === categoryId);
-    if (!category) return;
-
-    setCategories(prev => prev.map(cat => 
-      cat.id === categoryId 
-        ? { ...cat, name: newCategory.name || cat.name, description: newCategory.description || cat.description, icon: newCategory.icon || cat.icon }
-        : cat
-    ));
+    updateCategory(categoryId, {
+      name: newCategory.name,
+      description: newCategory.description,
+      icon: newCategory.icon
+    });
+    
     setNewCategory({ name: '', description: '', icon: '🔬' });
     setEditingCategory(null);
+    alert('Catégorie mise à jour avec succès !');
   };
 
   const handleUpdateSubCategory = (categoryId: string, subCategoryId: string) => {
-    setCategories(prev => prev.map(cat => 
-      cat.id === categoryId 
-        ? { 
-            ...cat, 
-            subCategories: cat.subCategories.map(subCat => 
-              subCat.id === subCategoryId 
-                ? { ...subCat, name: newSubCategory.name || subCat.name, description: newSubCategory.description || subCat.description }
-                : subCat
-            )
-          }
-        : cat
-    ));
+    updateSubCategory(categoryId, subCategoryId, {
+      name: newSubCategory.name,
+      description: newSubCategory.description
+    });
+    
     setNewSubCategory({ name: '', description: '' });
     setEditingSubCategory(null);
+    alert('Sous-catégorie mise à jour avec succès !');
   };
 
   const handleDeleteCategory = (categoryId: string) => {
@@ -204,15 +94,14 @@ const CategoryManagement = () => {
     }
 
     if (window.confirm(`Êtes-vous sûr de vouloir supprimer la catégorie "${category.name}" ?`)) {
-      setCategories(prev => prev.filter(cat => cat.id !== categoryId));
+      deleteCategory(categoryId);
+      alert('Catégorie supprimée avec succès !');
     }
   };
 
   const handleDeleteSubCategory = (categoryId: string, subCategoryId: string) => {
     const category = categories.find(cat => cat.id === categoryId);
-    if (!category) return;
-
-    const subCategory = category.subCategories.find(subCat => subCat.id === subCategoryId);
+    const subCategory = category?.subCategories.find(subCat => subCat.id === subCategoryId);
     if (!subCategory) return;
 
     if (subCategory.productCount > 0) {
@@ -221,15 +110,12 @@ const CategoryManagement = () => {
     }
 
     if (window.confirm(`Êtes-vous sûr de vouloir supprimer la sous-catégorie "${subCategory.name}" ?`)) {
-      setCategories(prev => prev.map(cat => 
-        cat.id === categoryId 
-          ? { ...cat, subCategories: cat.subCategories.filter(subCat => subCat.id !== subCategoryId) }
-          : cat
-      ));
+      deleteSubCategory(categoryId, subCategoryId);
+      alert('Sous-catégorie supprimée avec succès !');
     }
   };
 
-  const startEditCategory = (category: Category) => {
+  const startEditCategory = (category: any) => {
     setNewCategory({
       name: category.name,
       description: category.description,
@@ -238,7 +124,7 @@ const CategoryManagement = () => {
     setEditingCategory(category.id);
   };
 
-  const startEditSubCategory = (categoryId: string, subCategory: SubCategory) => {
+  const startEditSubCategory = (categoryId: string, subCategory: any) => {
     setNewSubCategory({
       name: subCategory.name,
       description: subCategory.description

@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Beaker, Microscope, Shield, Truck, Award, Users } from 'lucide-react';
+import { useCategories } from '../context/CategoryContext';
 
 const Home = () => {
+  const { categories } = useCategories();
+  
   const features = [
     {
       icon: Beaker,
@@ -26,28 +29,26 @@ const Home = () => {
     }
   ];
 
-  const categories = [
-    {
-      name: 'Chimie',
-      image: 'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=400',
-      description: 'Béchers, erlenmeyers, tubes à essai, réactifs'
-    },
-    {
-      name: 'Physique',
-      image: 'https://images.pexels.com/photos/8847434/pexels-photo-8847434.jpeg?auto=compress&cs=tinysrgb&w=400',
-      description: 'Oscilloscopes, multimètres, générateurs'
-    },
-    {
-      name: 'Biologie',
-      image: 'https://images.pexels.com/photos/3735747/pexels-photo-3735747.jpeg?auto=compress&cs=tinysrgb&w=400',
-      description: 'Microscopes, modèles anatomiques, échantillons'
-    },
-    {
-      name: 'Sécurité',
-      image: 'https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg?auto=compress&cs=tinysrgb&w=400',
-      description: 'EPI, douches de sécurité, armoires ventilées'
-    }
-  ];
+  // Prendre les 4 premières catégories pour l'affichage sur la page d'accueil
+  const displayCategories = categories.slice(0, 4).map(cat => ({
+    name: cat.name.replace('Équipement de ', '').replace('Équipement d\'', ''),
+    image: getImageForCategory(cat.id),
+    description: cat.description
+  }));
+
+  function getImageForCategory(categoryId: string) {
+    const imageMap: Record<string, string> = {
+      'chemistry': 'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'physics': 'https://images.pexels.com/photos/8847434/pexels-photo-8847434.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'biology': 'https://images.pexels.com/photos/3735747/pexels-photo-3735747.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'safety': 'https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'furniture': 'https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'reagents': 'https://images.pexels.com/photos/256262/pexels-photo-256262.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'training': 'https://images.pexels.com/photos/8197543/pexels-photo-8197543.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'miscellaneous': 'https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=400'
+    };
+    return imageMap[categoryId] || 'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=400';
+  }
 
   return (
     <div className="min-h-screen">
@@ -140,7 +141,7 @@ const Home = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category, index) => (
+            {displayCategories.map((category, index) => (
               <Link
                 key={index}
                 to="/boutique"

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Grid, List, ShoppingCart, ChevronDown, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useCategories } from '../context/CategoryContext';
 
 const Shop = () => {
+  const { categories } = useCategories();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedSubCategory, setSelectedSubCategory] = useState('all');
@@ -12,72 +14,20 @@ const Shop = () => {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const { addToCart } = useCart();
 
-  const categories = [
+  const shopCategories = [
     { 
       id: 'all', 
       name: 'Toutes catégories',
       subCategories: []
     },
-    { 
-      id: 'chemistry', 
-      name: 'Équipement de Chimie',
-      subCategories: [
-        { id: 'beakers', name: 'Béchers et Erlenmeyers' },
-        { id: 'tubes', name: 'Tubes à essai' },
-        { id: 'burettes', name: 'Burettes et Pipettes' },
-        { id: 'balances', name: 'Balances de précision' }
-      ]
-    },
-    { 
-      id: 'reagents', 
-      name: 'Réactifs',
-      subCategories: [
-        { id: 'acids', name: 'Acides' },
-        { id: 'bases', name: 'Bases' },
-        { id: 'salts', name: 'Sels' },
-        { id: 'indicators', name: 'Indicateurs colorés' }
-      ]
-    },
-    { 
-      id: 'physics', 
-      name: 'Équipement de Physique',
-      subCategories: [
-        { id: 'mechanics', name: 'Mécanique' },
-        { id: 'electricity', name: 'Électricité' },
-        { id: 'optics', name: 'Optique' },
-        { id: 'thermodynamics', name: 'Thermodynamique' }
-      ]
-    },
-    { 
-      id: 'biology', 
-      name: 'Équipement de SVT',
-      subCategories: [
-        { id: 'microscopes', name: 'Microscopes' },
-        { id: 'models', name: 'Modèles anatomiques' },
-        { id: 'specimens', name: 'Échantillons' },
-        { id: 'dissection', name: 'Matériel de dissection' }
-      ]
-    },
-    { 
-      id: 'safety', 
-      name: 'Équipement de Sécurité',
-      subCategories: [
-        { id: 'ppe', name: 'EPI' },
-        { id: 'showers', name: 'Douches de sécurité' },
-        { id: 'extinguishers', name: 'Extincteurs' },
-        { id: 'storage', name: 'Armoires de sécurité' }
-      ]
-    },
-    { 
-      id: 'furniture', 
-      name: 'Mobilier de Laboratoire',
-      subCategories: [
-        { id: 'benches', name: 'Paillasses' },
-        { id: 'stools', name: 'Tabourets' },
-        { id: 'cabinets', name: 'Armoires' },
-        { id: 'fume-hoods', name: 'Hottes aspirantes' }
-      ]
-    }
+    ...categories.map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      subCategories: cat.subCategories.map(sub => ({
+        id: sub.id,
+        name: sub.name
+      }))
+    }))
   ];
 
   const priceRanges = [
@@ -278,7 +228,7 @@ const Shop = () => {
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Catégories</label>
                 <div className="space-y-2">
-                  {categories.map(category => (
+                  {shopCategories.map(category => (
                     <div key={category.id}>
                       <div className="flex items-center justify-between">
                         <button

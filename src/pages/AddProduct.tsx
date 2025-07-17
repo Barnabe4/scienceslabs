@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Package, Image, DollarSign, Tag, AlertTriangle, Plus, X } from 'lucide-react';
+import { useCategories } from '../context/CategoryContext';
 
 const AddProduct = () => {
+  const { categories } = useCategories();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -23,113 +25,6 @@ const AddProduct = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [newSpecKey, setNewSpecKey] = useState('');
   const [newSpecValue, setNewSpecValue] = useState('');
-
-  const categories = [
-    { 
-      id: 'chemistry', 
-      name: 'Équipement de Chimie',
-      subCategories: [
-        { id: 'glassware', name: 'Verreries' },
-        { id: 'beakers', name: 'Béchers' },
-        { id: 'volumetric-flasks', name: 'Fioles jaugées' },
-        { id: 'erlenmeyers', name: 'Erlenmeyers' },
-        { id: 'test-tubes', name: 'Tubes à essai' },
-        { id: 'burettes', name: 'Burettes et Pipettes' },
-        { id: 'balances', name: 'Balances de précision' },
-        { id: 'heating', name: 'Matériel de chauffage' }
-      ]
-    },
-    { 
-      id: 'reagents', 
-      name: 'Réactifs',
-      subCategories: [
-        { id: 'fehling', name: 'Liqueur de Fehling' },
-        { id: 'schiff', name: 'Réactif de Schiff' },
-        { id: 'acids', name: 'Acides' },
-        { id: 'bases', name: 'Bases' },
-        { id: 'salts', name: 'Sels' },
-        { id: 'indicators', name: 'Indicateurs colorés' },
-        { id: 'organic', name: 'Réactifs organiques' },
-        { id: 'inorganic', name: 'Réactifs inorganiques' }
-      ]
-    },
-    { 
-      id: 'physics', 
-      name: 'Équipement de Physique',
-      subCategories: [
-        { id: 'oscilloscopes', name: 'Oscilloscopes' },
-        { id: 'generators', name: 'Générateurs' },
-        { id: 'mechanics', name: 'Mécanique' },
-        { id: 'electricity', name: 'Électricité' },
-        { id: 'optics', name: 'Optique' },
-        { id: 'thermodynamics', name: 'Thermodynamique' },
-        { id: 'magnetism', name: 'Magnétisme' },
-        { id: 'waves', name: 'Ondes et vibrations' }
-      ]
-    },
-    { 
-      id: 'biology', 
-      name: 'Équipement de SVT',
-      subCategories: [
-        { id: 'microscopes', name: 'Microscopes' },
-        { id: 'petri-dishes', name: 'Boîtes de Pétri' },
-        { id: 'models', name: 'Modèles anatomiques' },
-        { id: 'specimens', name: 'Échantillons' },
-        { id: 'dissection', name: 'Matériel de dissection' },
-        { id: 'culture', name: 'Matériel de culture' },
-        { id: 'observation', name: 'Matériel d\'observation' }
-      ]
-    },
-    { 
-      id: 'safety', 
-      name: 'Équipement de Sécurité',
-      subCategories: [
-        { id: 'lab-coats', name: 'Blouses de laboratoire' },
-        { id: 'gloves', name: 'Gants de protection' },
-        { id: 'safety-glasses', name: 'Lunettes de sécurité' },
-        { id: 'ppe', name: 'EPI complets' },
-        { id: 'showers', name: 'Douches de sécurité' },
-        { id: 'extinguishers', name: 'Extincteurs' },
-        { id: 'storage', name: 'Armoires de sécurité' },
-        { id: 'ventilation', name: 'Systèmes de ventilation' }
-      ]
-    },
-    { 
-      id: 'furniture', 
-      name: 'Mobilier de laboratoire',
-      subCategories: [
-        { id: 'benches', name: 'Paillasses' },
-        { id: 'stools', name: 'Tabourets' },
-        { id: 'cabinets', name: 'Armoires' },
-        { id: 'fume-hoods', name: 'Hottes aspirantes' },
-        { id: 'tables', name: 'Tables de laboratoire' },
-        { id: 'chairs', name: 'Chaises ergonomiques' },
-        { id: 'storage-units', name: 'Unités de rangement' }
-      ]
-    },
-    { 
-      id: 'training', 
-      name: 'Formations & Accompagnement',
-      subCategories: [
-        { id: 'safety-training', name: 'Formation sécurité' },
-        { id: 'equipment-training', name: 'Formation équipements' },
-        { id: 'maintenance', name: 'Formation maintenance' },
-        { id: 'consulting', name: 'Conseil pédagogique' },
-        { id: 'installation', name: 'Installation et mise en service' }
-      ]
-    },
-    { 
-      id: 'miscellaneous', 
-      name: 'Divers',
-      subCategories: [
-        { id: 'consumables', name: 'Consommables' },
-        { id: 'spare-parts', name: 'Pièces de rechange' },
-        { id: 'cleaning', name: 'Produits de nettoyage' },
-        { id: 'documentation', name: 'Documentation technique' },
-        { id: 'software', name: 'Logiciels spécialisés' }
-      ]
-    }
-  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;

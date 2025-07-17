@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCategories } from '../context/CategoryContext';
 import { 
   Package, Plus, Search, Filter, Edit, Trash2, Eye, Image, 
   AlertTriangle, CheckCircle, XCircle, ChevronDown, MoreHorizontal, 
@@ -29,6 +30,7 @@ interface Product {
 
 const ProductManagement = () => {
   const navigate = useNavigate();
+  const { categories } = useCategories();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -163,16 +165,9 @@ const ProductManagement = () => {
     }
   ]);
 
-  const categories = [
+  const categoryOptions = [
     { id: 'all', name: 'Toutes catégories' },
-    { id: 'chemistry', name: 'Équipement de Chimie' },
-    { id: 'reagents', name: 'Réactifs' },
-    { id: 'physics', name: 'Équipement de Physique' },
-    { id: 'biology', name: 'Équipement de SVT' },
-    { id: 'safety', name: 'Équipement de Sécurité' },
-    { id: 'furniture', name: 'Mobilier de laboratoire' },
-    { id: 'training', name: 'Formations & Accompagnement' },
-    { id: 'miscellaneous', name: 'Divers' }
+    ...categories.map(cat => ({ id: cat.id, name: cat.name }))
   ];
 
   const filteredProducts = products.filter(product => {
@@ -466,7 +461,7 @@ const ProductManagement = () => {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  {categories.map(category => (
+                  {categoryOptions.map(category => (
                     <option key={category.id} value={category.id}>{category.name}</option>
                   ))}
                 </select>
@@ -570,7 +565,7 @@ const ProductManagement = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {categories.find(c => c.id === product.category)?.name}
+                        {categoryOptions.find(c => c.id === product.category)?.name}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
