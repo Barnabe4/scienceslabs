@@ -275,23 +275,7 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Link
-                to="/finance/rapports"
-                className="bg-blue-50 border border-blue-200 rounded-lg p-6 hover:bg-blue-100 transition-colors"
-              >
-                <h3 className="font-semibold text-blue-900 mb-2">Rapports Financiers</h3>
-                <p className="text-blue-700 text-sm">Revenus, dépenses et bénéfices</p>
-              </Link>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                <h3 className="font-semibold text-green-900 mb-2">Rapport de Ventes</h3>
-                <p className="text-green-700 text-sm">Analyse des ventes par période</p>
-              </div>
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                <h3 className="font-semibold text-purple-900 mb-2">Rapport de Stock</h3>
-                <p className="text-purple-700 text-sm">État du stock et alertes</p>
-              </div>
-            </div>
+        <div className="w-64 bg-white shadow-lg min-h-screen">
           <div className="p-6">
             <h1 className="text-xl font-bold text-gray-900">Sciences Labs</h1>
             <p className="text-sm text-gray-600">Administration</p>
