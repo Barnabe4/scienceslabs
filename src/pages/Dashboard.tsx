@@ -31,6 +31,7 @@ import UserManagement from './UserManagement';
 import ProductManagement from './ProductManagement';
 import Finance from './Finance';
 import QuoteManagement from './QuoteManagement';
+import InvoiceManagement from './InvoiceManagement';
 
 interface MenuItem {
   id: string;
@@ -61,6 +62,7 @@ const Dashboard: React.FC = () => {
     { id: 'orders', name: 'Commandes', icon: Package },
     { id: 'clients', name: 'Clients', icon: Users },
     { id: 'products', name: 'Produits', icon: ShoppingCart },
+    { id: 'invoices', name: 'Facturation', icon: FileText },
     { 
       id: 'finance', 
       name: 'Finances', 
@@ -268,6 +270,13 @@ const Dashboard: React.FC = () => {
             <ProductManagement />
           </div>
       );
+      
+      case 'invoices':
+        return (
+          <div className="space-y-6">
+            <InvoiceManagement />
+          </div>
+        );
       
       case 'finance':
       case 'finance-dashboard':

@@ -87,6 +87,7 @@ function App() {
                             <Route path="/admin/produits/:id/preview" element={<ProductPreview />} />
                             <Route path="/admin/categories" element={<CategoryManagement />} />
                             <Route path="/admin/devis" element={<QuoteManagement />} />
+                            <Route path="/admin/factures" element={<InvoiceManagement />} />
                             <Route path="/finance" element={<Finance />} />
                             <Route path="/finance/dashboard" element={<FinancialDashboard />} />
                             <Route path="/finance/revenus" element={<RevenueManagement />} />
