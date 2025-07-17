@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Send, FileText, Mail, User, Building, Phone, MapPin } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import jsPDF from 'jspdf';
-import emailjs from 'emailjs-com';
+import emailjs from '@emailjs/browser';
 
 interface QuoteRequestModalProps {
   isOpen: boolean;
