@@ -97,9 +97,8 @@ function App() {
                       <Footer />
                     </div>
                   </Router>
-                  </ManagementProvider>
-                </CartProvider>
-              </QuoteProvider>
+                </ManagementProvider>
+              </CartProvider>
             </OrderProvider>
           </DashboardProvider>
         </CategoryProvider>
@@ -109,3 +108,5 @@ function App() {
 }
 
 export default App;
+  )
+}
