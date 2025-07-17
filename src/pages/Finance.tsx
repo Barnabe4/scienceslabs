@@ -7,7 +7,6 @@ import FinancialDashboard from './FinancialDashboard';
 import RevenueManagement from './RevenueManagement';
 import ExpenseManagement from './ExpenseManagement';
 import InvoiceManagement from './InvoiceManagement';
-import FinancialReports from './FinancialReports';
 import FinancialSettings from './FinancialSettings';
 
 interface MenuItem {
