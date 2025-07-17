@@ -21,6 +21,7 @@ import { CategoryProvider } from './context/CategoryContext';
 import { DashboardProvider } from './context/DashboardContext';
 import { OrderProvider } from './context/OrderContext';
 import { SettingsProvider } from './context/SettingsContext';
+import { QuoteProvider } from './context/QuoteContext';
 import OrderManagement from './pages/OrderManagement';
 import UserManagement from './pages/UserManagement';
 import AddUser from './pages/AddUser';
@@ -49,9 +50,10 @@ function App() {
         <CategoryProvider>
           <DashboardProvider>
             <OrderProvider>
-              <CartProvider>
-                <ManagementProvider>
-                  <Router>
+              <QuoteProvider>
+                <CartProvider>
+                  <ManagementProvider>
+                    <Router>
                     <div className="min-h-screen bg-gray-50">
                       <Header />
                       <main>
@@ -95,8 +97,9 @@ function App() {
                       <Footer />
                     </div>
                   </Router>
-                </ManagementProvider>
-              </CartProvider>
+                  </ManagementProvider>
+                </CartProvider>
+              </QuoteProvider>
             </OrderProvider>
           </DashboardProvider>
         </CategoryProvider>

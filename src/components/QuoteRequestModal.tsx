@@ -303,6 +303,35 @@ const QuoteRequestModal: React.FC<QuoteRequestModalProps> = ({ isOpen, onClose }
       // Télécharger le PDF localement
       pdf.save(`Devis_SciencesLabs_${new Date().toISOString().split('T')[0]}.pdf`);
       
+      // Créer le devis dans le système
+      const quoteData = {
+        customer: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          establishment: formData.establishment,
+          city: formData.city
+        },
+        items: cart.map((item, index) => ({
+          id: index + 1,
+          productName: item.name,
+          quantity: item.quantity,
+          unitPrice: item.price,
+          totalPrice: item.price * item.quantity
+        })),
+        subtotal: getTotalPrice(),
+        tva: Math.round(getTotalPrice() * 0.18),
+        shipping: getTotalPrice() >= 100000 ? 0 : 15000,
+        totalAmount: getTotalPrice() * 1.18 + (getTotalPrice() >= 100000 ? 0 : 15000),
+        status: 'pending' as const,
+        priority: 'medium' as const,
+        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        message: formData.message
+      };
+      
+      createQuote(quoteData);
+      
       // Simuler l'envoi par email
       await sendEmail(pdfBlob);
       

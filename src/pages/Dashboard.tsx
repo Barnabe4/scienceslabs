@@ -30,6 +30,7 @@ import ClientManagement from './ClientManagement';
 import UserManagement from './UserManagement';
 import ProductManagement from './ProductManagement';
 import Finance from './Finance';
+import QuoteManagement from './QuoteManagement';
 
 interface MenuItem {
   id: string;
@@ -251,6 +252,13 @@ const Dashboard: React.FC = () => {
         return (
           <div className="space-y-6">
             <ClientManagement />
+          </div>
+        );
+        
+      case 'quotes':
+        return (
+          <div className="space-y-6">
+            <QuoteManagement />
           </div>
         );
         
