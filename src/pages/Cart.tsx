@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Printer } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import QuoteRequestModal from '../components/QuoteRequestModal';
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
 
   const handlePrint = () => {
     const printContent = `
@@ -252,6 +254,13 @@ const Cart = () => {
                 Commander
               </button>
 
+              <button 
+                onClick={() => setShowQuoteModal(true)}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors mb-4"
+              >
+                Demander un devis
+              </button>
+
               <div className="text-center">
                 <p className="text-sm text-gray-500 mb-2">Moyens de paiement acceptés:</p>
                 <div className="flex justify-center space-x-2">
@@ -264,6 +273,11 @@ const Cart = () => {
           </div>
         </div>
 
+        {/* Modal de demande de devis */}
+        <QuoteRequestModal 
+          isOpen={showQuoteModal} 
+          onClose={() => setShowQuoteModal(false)} 
+        />
       </div>
     </div>
   );

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Truck, HeadphonesIcon, Award, Users, BookOpen, Wrench, Shield, Globe } from 'lucide-react';
+import QuoteRequestModal from '../components/QuoteRequestModal';
 
 const Services = () => {
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
+
   const mainServices = [
     {
       icon: Truck,
@@ -167,6 +170,12 @@ const Services = () => {
             >
               Demander un devis
             </Link>
+            <button
+              onClick={() => setShowQuoteModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center justify-center"
+            >
+              Devis rapide
+            </button>
             <Link
               to="/contact"
               className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition-all inline-flex items-center justify-center"
@@ -174,6 +183,12 @@ const Services = () => {
               Nous contacter
             </Link>
           </div>
+          
+          {/* Modal de demande de devis */}
+          <QuoteRequestModal 
+            isOpen={showQuoteModal} 
+            onClose={() => setShowQuoteModal(false)} 
+          />
         </div>
       </div>
     </div>

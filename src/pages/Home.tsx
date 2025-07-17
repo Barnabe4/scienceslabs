@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Beaker, Microscope, Shield, Truck, Award, Users } from 'lucide-react';
 import { useCategories } from '../context/CategoryContext';
+import QuoteRequestModal from '../components/QuoteRequestModal';
 
 const Home = () => {
   const { categories } = useCategories();
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
   
   const features = [
     {
@@ -83,6 +85,12 @@ const Home = () => {
                 >
                   Demander un devis
                 </Link>
+                <button
+                  onClick={() => setShowQuoteModal(true)}
+                  className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all inline-flex items-center justify-center"
+                >
+                  Devis rapide
+                </button>
               </div>
             </div>
             <div className="relative">
@@ -103,6 +111,12 @@ const Home = () => {
             </div>
           </div>
         </div>
+        
+        {/* Modal de demande de devis */}
+        <QuoteRequestModal 
+          isOpen={showQuoteModal} 
+          onClose={() => setShowQuoteModal(false)} 
+        />
       </section>
 
       {/* Features Section */}
