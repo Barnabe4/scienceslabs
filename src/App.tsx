@@ -43,6 +43,7 @@ import ExpenseManagement from './pages/ExpenseManagement';
 import InvoiceManagement from './pages/InvoiceManagement';
 import FinancialReports from './pages/FinancialReports';
 import FinancialSettings from './pages/FinancialSettings';
+import ReportsManagement from './pages/ReportsManagement';
 
 function App() {
   return (
@@ -95,6 +96,7 @@ function App() {
                             <Route path="/finance/factures" element={<InvoiceManagement />} />
                             <Route path="/finance/rapports" element={<FinancialReports />} />
                             <Route path="/finance/parametres" element={<FinancialSettings />} />
+                            <Route path="/admin/rapports" element={<ReportsManagement />} />
                           </Routes>
                         </main>
                         <Footer />
