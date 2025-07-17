@@ -5,6 +5,8 @@ import {
   Building, Users, Truck, TrendingUp, Upload
 } from 'lucide-react';
 
+import { CheckCircle } from 'lucide-react';
+
 interface Expense {
   id: string;
   date: string;
@@ -728,7 +730,7 @@ const ExpenseManagement = () => {
             </button>
             {selectedExpense.status === 'pending' && (
               <button className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                <CheckCircle className="w-4 h-4 mr-2" />
+                <Clock className="w-4 h-4 mr-2" />
                 Approuver
               </button>
             )}

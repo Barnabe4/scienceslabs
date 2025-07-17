@@ -5,6 +5,8 @@ import {
   CheckCircle, Clock, XCircle, Settings, Plus
 } from 'lucide-react';
 
+import { Package } from 'lucide-react';
+
 interface Invoice {
   id: string;
   number: string;

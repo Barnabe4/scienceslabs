@@ -5,6 +5,8 @@ import {
   CreditCard, Smartphone, Building, Coins, Calendar, ArrowRight
 } from 'lucide-react';
 
+import { Package } from 'lucide-react';
+
 interface Transaction {
   id: string;
   date: string;

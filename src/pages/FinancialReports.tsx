@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { FileText, Download, Printer, Calendar, BarChart3, PieChart, TrendingUp, DollarSign, ArrowRight, ChevronDown, FileSpreadsheet, File as FilePdf, Mail } from 'lucide-react';
 import { useDashboard } from '../context/DashboardContext';
-import { 
-  SalesChart, 
-  ProfitChart, 
-  TransactionsChart 
-} from '../components/DashboardCharts';
+import { SalesChart, ProfitChart, TransactionsChart } from '../components/DashboardCharts';
+
+// Import these components at the top of the file
+import { ShoppingBag, Package, Users, CreditCard } from 'lucide-react';
 
 const FinancialReports = () => {
   const { stats, financialEntries } = useDashboard();
@@ -435,8 +434,5 @@ const FinancialReports = () => {
     </div>
   );
 };
-
-// Import these components at the top of the file
-import { ShoppingBag, Package, Users, CreditCard } from 'lucide-react';
 
 export default FinancialReports;

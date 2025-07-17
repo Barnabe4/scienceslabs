@@ -11,6 +11,11 @@ interface CompanyInfo {
   postalCode: string;
   website: string;
   description: string;
+  yearsOfExperience?: number;
+  coverageArea?: string;
+  mainSector?: string;
+  targetAudience?: string;
+  values?: string;
 }
 
 interface PaymentMethod {
