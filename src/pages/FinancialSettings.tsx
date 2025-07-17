@@ -139,7 +139,7 @@ const FinancialSettings = () => {
   };
 
   const handleSaveSettings = () => {
-    alert('Paramètres financiers enregistrés avec succès');
+    alert('Paramètres financiers enregistrés avec succès !');
   };
 
   const getPaymentMethodIcon = (methodId: string) => {

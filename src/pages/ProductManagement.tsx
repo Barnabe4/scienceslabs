@@ -645,14 +645,20 @@ const ProductManagement = () => {
               <p className="text-sm text-gray-600">Gérer les produits en rupture</p>
             </div>
           </button>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => alert('Fonctionnalité en cours de développement')}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <BarChart3 className="w-8 h-8 text-blue-600 mr-4" />
             <div>
               <h4 className="font-medium text-gray-900">Analyse des ventes</h4>
               <p className="text-sm text-gray-600">Voir les produits les plus vendus</p>
             </div>
           </button>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => alert('Fonctionnalité en cours de développement')}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <Tag className="w-8 h-8 text-purple-600 mr-4" />
             <div>
               <h4 className="font-medium text-gray-900">Gestion des prix</h4>

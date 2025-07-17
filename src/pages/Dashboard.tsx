@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useDashboard } from '../context/DashboardContext';
 import { useOrders } from '../context/OrderContext';
@@ -230,9 +231,9 @@ const Dashboard: React.FC = () => {
       
       case 'finance':
         return (
-        <div className="space-y-6">
-          <Finance />
-        </div>
+          <div className="space-y-6">
+            <Finance />
+          </div>
         );
 
       default:
@@ -241,7 +242,30 @@ const Dashboard: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               {menuItems.find(item => item.id === activeTab)?.name}
             </h2>
-            <p className="text-gray-600">Cette section est en cours de développement.</p>
+            <div className="space-y-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h3 className="font-medium text-yellow-800">Tâches en cours</h3>
+                <ul className="mt-2 space-y-2">
+                  <li className="flex items-center text-yellow-700">
+                    <input type="checkbox" className="mr-2" />
+                    Vérifier le stock des béchers
+                  </li>
+                  <li className="flex items-center text-yellow-700">
+                    <input type="checkbox" className="mr-2" />
+                    Préparer la commande CMD-2024-001
+                  </li>
+                </ul>
+              </div>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h3 className="font-medium text-green-800">Tâches terminées</h3>
+                <ul className="mt-2 space-y-2">
+                  <li className="flex items-center text-green-700">
+                    <input type="checkbox" checked className="mr-2" />
+                    Mise à jour du catalogue
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         );
     }
@@ -251,7 +275,23 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 bg-white shadow-lg min-h-screen">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Link
+                to="/finance/rapports"
+                className="bg-blue-50 border border-blue-200 rounded-lg p-6 hover:bg-blue-100 transition-colors"
+              >
+                <h3 className="font-semibold text-blue-900 mb-2">Rapports Financiers</h3>
+                <p className="text-blue-700 text-sm">Revenus, dépenses et bénéfices</p>
+              </Link>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                <h3 className="font-semibold text-green-900 mb-2">Rapport de Ventes</h3>
+                <p className="text-green-700 text-sm">Analyse des ventes par période</p>
+              </div>
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                <h3 className="font-semibold text-purple-900 mb-2">Rapport de Stock</h3>
+                <p className="text-purple-700 text-sm">État du stock et alertes</p>
+              </div>
+            </div>
           <div className="p-6">
             <h1 className="text-xl font-bold text-gray-900">Sciences Labs</h1>
             <p className="text-sm text-gray-600">Administration</p>

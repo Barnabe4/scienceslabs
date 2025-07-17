@@ -8,6 +8,7 @@ import RevenueManagement from './RevenueManagement';
 import ExpenseManagement from './ExpenseManagement';
 import InvoiceManagement from './InvoiceManagement';
 import FinancialSettings from './FinancialSettings';
+import FinancialReports from './FinancialReports';
 
 interface MenuItem {
   id: string;

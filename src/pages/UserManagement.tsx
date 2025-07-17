@@ -459,7 +459,13 @@ const UserManagement = () => {
               <p className="text-sm text-gray-600">Voir l'activité des utilisateurs</p>
             </div>
           </button>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => alert('Fonctionnalité en cours de développement')}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          <button 
+            onClick={() => alert('Fonctionnalité en cours de développement')}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <Settings className="w-8 h-8 text-purple-600 mr-4" />
             <div>
               <h4 className="font-medium text-gray-900">Paramètres de sécurité</h4>

@@ -119,7 +119,7 @@ const AddClient = () => {
     }
 
     // Simulation de création de client
-    console.log('Création client:', formData);
+    alert('Client créé avec succès !');
     
     // Redirection vers la liste des clients
     navigate('/admin/clients');

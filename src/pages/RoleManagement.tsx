@@ -114,6 +114,7 @@ const RoleManagement = () => {
     setRoles(prev => [...prev, role]);
     setNewRole({ name: '', description: '', permissions: [] });
     setShowCreateRole(false);
+    alert('Rôle créé avec succès !');
   };
 
   const handleDeleteRole = (roleId: string) => {

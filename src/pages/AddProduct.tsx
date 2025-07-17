@@ -219,7 +219,7 @@ const AddProduct = () => {
     }
 
     // Simulation de création de produit
-    console.log('Création produit:', formData);
+    alert('Produit créé avec succès !');
     
     // Redirection vers la liste des produits
     navigate('/admin/produits');

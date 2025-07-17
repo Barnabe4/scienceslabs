@@ -19,8 +19,15 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    // Simulation d'envoi du message
+    alert('Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
+    setFormData({
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+      type: 'general'
+    });
   };
 
   const contactInfo = [

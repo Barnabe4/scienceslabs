@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
+import { useCart } from '../context/CartContext';
 import { Calendar, Clock, Users, MapPin, BookOpen, Award, ChevronRight } from 'lucide-react';
 
 const Training = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (training: any) => {
+    addToCart({
+      id: training.id,
+      name: training.title,
+      price: training.price,
+      image: training.image,
+      quantity: 1
+    });
+  };
 
   const trainingCategories = [
     { id: 'all', name: 'Toutes les formations' },
@@ -281,6 +293,10 @@ const Training = () => {
             </div>
             <div className="md:col-span-2 text-center">
               <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  alert('Votre demande d\'inscription a été envoyée ! Nous vous contacterons bientôt.');
+                }}
                 type="submit"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
               >

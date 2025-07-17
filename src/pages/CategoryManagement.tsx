@@ -141,6 +141,7 @@ const CategoryManagement = () => {
     setCategories(prev => [...prev, newCat]);
     setNewCategory({ name: '', description: '', icon: '🔬' });
     setShowAddCategory(false);
+    alert('Catégorie créée avec succès !');
   };
 
   const handleAddSubCategory = (categoryId: string) => {

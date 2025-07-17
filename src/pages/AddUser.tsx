@@ -136,7 +136,7 @@ const AddUser = () => {
     }
 
     // Simulation de création d'utilisateur
-    console.log('Création utilisateur:', formData);
+    alert('Utilisateur créé avec succès !');
     
     // Redirection vers la liste des utilisateurs
     navigate('/admin/utilisateurs');

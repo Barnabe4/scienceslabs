@@ -70,10 +70,12 @@ function App() {
                         <Route path="/admin/utilisateurs" element={<UserManagement />} />
                         <Route path="/admin/utilisateurs/ajouter" element={<AddUser />} />
                         <Route path="/admin/utilisateurs/:id/editer" element={<EditUser />} />
+                        <Route path="/admin/utilisateurs/:id" element={<EditUser />} />
                         <Route path="/admin/roles" element={<RoleManagement />} />
                         <Route path="/admin/clients" element={<ClientManagement />} />
                         <Route path="/admin/clients/ajouter" element={<AddClient />} />
                         <Route path="/admin/clients/:id/fiche" element={<ClientProfile />} />
+                        <Route path="/admin/clients/:id/editer" element={<AddClient />} />
                         <Route path="/admin/produits" element={<ProductManagement />} />
                         <Route path="/admin/produits/ajouter" element={<AddProduct />} />
                         <Route path="/admin/produits/:id/editer" element={<EditProduct />} />

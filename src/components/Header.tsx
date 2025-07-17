@@ -96,13 +96,15 @@ const Header = () => {
                       >
                         Dashboard
                       </Link>
-                      <Link
-                        to="/gestion"
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        Gestion
-                      </Link>
+                      {(user?.role === 'admin' || user?.role === 'director') && (
+                        <Link
+                          to="/gestion"
+                          className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Gestion
+                        </Link>
+                      )}
                       <button
                         onClick={() => {
                           logout();

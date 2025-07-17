@@ -258,7 +258,7 @@ const EditProduct = () => {
     }
 
     // Simulation de mise à jour
-    console.log('Mise à jour produit:', formData);
+    alert('Produit mis à jour avec succès !');
     
     // Redirection vers la liste des produits
     navigate('/admin/produits');

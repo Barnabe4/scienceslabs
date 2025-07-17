@@ -584,14 +584,20 @@ const ClientManagement = () => {
               <p className="text-sm text-gray-600">Configurer les conditions spéciales</p>
             </div>
           </button>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => alert('Fonctionnalité en cours de développement')}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <Clock className="w-8 h-8 text-blue-600 mr-4" />
             <div>
               <h4 className="font-medium text-gray-900">Paiements différés</h4>
               <p className="text-sm text-gray-600">Gérer les délais de paiement</p>
             </div>
           </button>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => alert('Fonctionnalité en cours de développement')}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <AlertCircle className="w-8 h-8 text-orange-600 mr-4" />
             <div>
               <h4 className="font-medium text-gray-900">Clients inactifs</h4>

@@ -245,7 +245,10 @@ const Cart = () => {
                 Procéder au paiement
               </button>
 
-              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-lg font-semibold transition-colors mb-4">
+              <button 
+                onClick={() => alert('Commande passée avec succès ! Vous recevrez un email de confirmation.')}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-lg font-semibold transition-colors mb-4"
+              >
                 Commander
               </button>
 

@@ -626,6 +626,7 @@ Entretien :
               <Link
                 key={relatedProduct.id}
                 to={`/produit/${relatedProduct.id}`}
+                disabled={!product.inStock}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <img

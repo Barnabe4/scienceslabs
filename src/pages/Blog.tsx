@@ -229,16 +229,23 @@ const Blog = () => {
           <p className="text-xl text-blue-100 mb-6">
             Abonnez-vous à notre newsletter pour recevoir les dernières actualités
           </p>
-          <div className="max-w-md mx-auto flex gap-4">
+          <form className="max-w-md mx-auto flex gap-4" onSubmit={(e) => {
+            e.preventDefault();
+            alert('Merci pour votre inscription à la newsletter !');
+          }}>
             <input
               type="email"
               placeholder="Votre adresse email"
+              required
               className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-300 focus:outline-none"
             />
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+            <button 
+              type="submit"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+            >
               S'abonner
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>

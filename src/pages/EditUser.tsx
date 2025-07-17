@@ -164,7 +164,7 @@ const EditUser = () => {
     }
 
     // Simulation de mise à jour
-    console.log('Mise à jour utilisateur:', formData);
+    alert('Utilisateur mis à jour avec succès !');
     
     // Redirection vers la liste des utilisateurs
     navigate('/admin/utilisateurs');
