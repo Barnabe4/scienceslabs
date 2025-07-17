@@ -462,9 +462,6 @@ const UserManagement = () => {
           <button 
             onClick={() => alert('Fonctionnalité en cours de développement')}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          <button 
-            onClick={() => alert('Fonctionnalité en cours de développement')}
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Settings className="w-8 h-8 text-purple-600 mr-4" />
             <div>
