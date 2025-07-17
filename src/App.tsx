@@ -35,6 +35,7 @@ import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
 import CategoryManagement from './pages/CategoryManagement';
 import ProductPreview from './pages/ProductPreview';
+import QuoteManagement from './pages/QuoteManagement';
 import Finance from './pages/Finance';
 import FinancialDashboard from './pages/FinancialDashboard';
 import RevenueManagement from './pages/RevenueManagement';
