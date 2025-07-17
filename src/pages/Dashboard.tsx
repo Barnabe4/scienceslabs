@@ -19,7 +19,9 @@ import {
   TrendingDown,
   Eye,
   Edit,
-  Trash2
+  Trash2,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
@@ -33,6 +35,14 @@ interface MenuItem {
   id: string;
   name: string;
   icon: React.ComponentType<any>;
+  hasSubmenu?: boolean;
+  submenu?: SubMenuItem[];
+}
+
+interface SubMenuItem {
+  id: string;
+  name: string;
+  icon: React.ComponentType<any>;
 }
 
 const Dashboard: React.FC = () => {
@@ -41,6 +51,7 @@ const Dashboard: React.FC = () => {
   const { orders, stats: orderStats } = useOrders();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedPeriod, setSelectedPeriod] = useState('Hier');
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
 
   const menuItems: MenuItem[] = [
     { id: 'dashboard', name: 'Tableau de bord', icon: BarChart3 },
@@ -49,7 +60,20 @@ const Dashboard: React.FC = () => {
     { id: 'orders', name: 'Commandes', icon: Package },
     { id: 'clients', name: 'Clients', icon: Users },
     { id: 'products', name: 'Produits', icon: ShoppingCart },
-    { id: 'finance', name: 'Finances', icon: DollarSign },
+    { 
+      id: 'finance', 
+      name: 'Finances', 
+      icon: DollarSign,
+      hasSubmenu: true,
+      submenu: [
+        { id: 'finance-dashboard', name: 'Tableau de bord', icon: BarChart3 },
+        { id: 'finance-revenue', name: 'Revenus', icon: TrendingUp },
+        { id: 'finance-expenses', name: 'Dépenses', icon: TrendingDown },
+        { id: 'finance-invoices', name: 'Factures', icon: FileText },
+        { id: 'finance-reports', name: 'Rapports', icon: BarChart3 },
+        { id: 'finance-settings', name: 'Paramètres', icon: SettingsIcon }
+      ]
+    },
     { id: 'reports', name: 'Rapports', icon: FileText },
     { id: 'settings', name: 'Paramètres', icon: SettingsIcon },
   ];
@@ -71,6 +95,14 @@ const Dashboard: React.FC = () => {
     if (currentPeriodIndex < periods.length - 1) {
       setSelectedPeriod(periods[currentPeriodIndex + 1]);
     }
+  };
+
+  const toggleMenu = (menuId: string) => {
+    setExpandedMenus(prev => 
+      prev.includes(menuId) 
+        ? prev.filter(id => id !== menuId)
+        : [...prev, menuId]
+    );
   };
 
   const getPeriodStats = () => {
@@ -230,6 +262,12 @@ const Dashboard: React.FC = () => {
       );
       
       case 'finance':
+      case 'finance-dashboard':
+      case 'finance-revenue':
+      case 'finance-expenses':
+      case 'finance-invoices':
+      case 'finance-reports':
+      case 'finance-settings':
         return (
           <div className="space-y-6">
             <Finance />
@@ -284,19 +322,63 @@ const Dashboard: React.FC = () => {
           <nav className="mt-6">
             {menuItems.map((item) => {
               const Icon = item.icon;
+              const isExpanded = expandedMenus.includes(item.id);
+              const isActive = activeTab === item.id || (item.submenu && item.submenu.some(sub => sub.id === activeTab));
+              
               return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center px-6 py-3 text-left hover:bg-gray-50 transition-colors ${
-                    activeTab === item.id
-                      ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600'
-                      : 'text-gray-700'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 mr-3" />
-                  <span className="font-medium">{item.name}</span>
-                </button>
+                <div key={item.id}>
+                  <button
+                    onClick={() => {
+                      if (item.hasSubmenu) {
+                        toggleMenu(item.id);
+                      } else {
+                        setActiveTab(item.id);
+                      }
+                    }}
+                    className={`w-full flex items-center justify-between px-6 py-3 text-left hover:bg-gray-50 transition-colors ${
+                      isActive
+                        ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600'
+                        : 'text-gray-700'
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <Icon className="w-5 h-5 mr-3" />
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    {item.hasSubmenu && (
+                      <div className="mr-2">
+                        {isExpanded ? (
+                          <ChevronUp className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </div>
+                    )}
+                  </button>
+                  
+                  {/* Submenu */}
+                  {item.hasSubmenu && isExpanded && item.submenu && (
+                    <div className="bg-gray-50">
+                      {item.submenu.map((subItem) => {
+                        const SubIcon = subItem.icon;
+                        return (
+                          <button
+                            key={subItem.id}
+                            onClick={() => setActiveTab(subItem.id)}
+                            className={`w-full flex items-center px-12 py-2 text-left hover:bg-gray-100 transition-colors ${
+                              activeTab === subItem.id
+                                ? 'bg-blue-100 text-blue-600'
+                                : 'text-gray-600'
+                            }`}
+                          >
+                            <SubIcon className="w-4 h-4 mr-3" />
+                            <span className="text-sm font-medium">{subItem.name}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </nav>
@@ -306,7 +388,19 @@ const Dashboard: React.FC = () => {
         <div className="flex-1 p-8">
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-gray-900">
-              {menuItems.find(item => item.id === activeTab)?.name}
+              {(() => {
+                const mainItem = menuItems.find(item => item.id === activeTab);
+                if (mainItem) return mainItem.name;
+                
+                // Chercher dans les sous-menus
+                for (const item of menuItems) {
+                  if (item.submenu) {
+                    const subItem = item.submenu.find(sub => sub.id === activeTab);
+                    if (subItem) return `${item.name} - ${subItem.name}`;
+                  }
+                }
+                return 'Tableau de bord';
+              })()}
             </h1>
             <p className="text-gray-600">
               Bienvenue, {user?.name || 'Administrateur'}
