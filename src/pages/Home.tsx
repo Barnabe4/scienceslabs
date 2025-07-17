@@ -29,11 +29,13 @@ const Home = () => {
     }
   ];
 
-  // Prendre les 4 premières catégories pour l'affichage sur la page d'accueil
-  const displayCategories = categories.slice(0, 4).map(cat => ({
-    name: cat.name.replace('Équipement de ', '').replace('Équipement d\'', ''),
+  // Afficher toutes les catégories dynamiquement sur la page d'accueil
+  const displayCategories = categories.map(cat => ({
+    id: cat.id,
+    name: cat.name,
     image: getImageForCategory(cat.id),
-    description: cat.description
+    description: cat.description,
+    productCount: cat.productCount
   }));
 
   function getImageForCategory(categoryId: string) {
@@ -45,8 +47,10 @@ const Home = () => {
       'furniture': 'https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=400',
       'reagents': 'https://images.pexels.com/photos/256262/pexels-photo-256262.jpeg?auto=compress&cs=tinysrgb&w=400',
       'training': 'https://images.pexels.com/photos/8197543/pexels-photo-8197543.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'miscellaneous': 'https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=400'
+      'miscellaneous': 'https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'informatique': 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=400'
     };
+    // Image par défaut pour les nouvelles catégories
     return imageMap[categoryId] || 'https://images.pexels.com/photos/2280549/pexels-photo-2280549.jpeg?auto=compress&cs=tinysrgb&w=400';
   }
 
@@ -140,11 +144,11 @@ const Home = () => {
               Tout ce dont vous avez besoin pour équiper vos laboratoires
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {displayCategories.map((category, index) => (
               <Link
                 key={index}
-                to="/boutique"
+                to={`/boutique?category=${category.id}`}
                 className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="aspect-w-16 aspect-h-12">
@@ -158,10 +162,18 @@ const Home = () => {
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                   <h3 className="text-xl font-bold mb-1">{category.name}</h3>
                   <p className="text-sm text-gray-200">{category.description}</p>
+                  <p className="text-xs text-gray-300 mt-1">{category.productCount} produits</p>
                 </div>
               </Link>
             ))}
           </div>
+          
+          {displayCategories.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">Aucune catégorie disponible</p>
+              <p className="text-gray-400 text-sm mt-2">Ajoutez des catégories depuis l'interface d'administration</p>
+            </div>
+          )}
         </div>
       </section>
 

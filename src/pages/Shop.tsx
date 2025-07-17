@@ -181,6 +181,15 @@ const Shop = () => {
     setSelectedSubCategory('all');
   };
 
+  // Gérer les paramètres URL pour la catégorie sélectionnée
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    if (categoryParam && categoryParam !== 'all') {
+      setSelectedCategory(categoryParam);
+    }
+  }, []);
+
   const handleAddToCart = (product: any) => {
     addToCart({
       id: product.id,
