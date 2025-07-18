@@ -80,10 +80,10 @@ const Home = () => {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
                 <Link
-                  to="/contact"
+                  to="/services"
                   className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all inline-flex items-center justify-center"
                 >
-                  Demander un devis
+                  En savoir plus
                 </Link>
                 <button
                   onClick={() => setShowQuoteModal(true)}
