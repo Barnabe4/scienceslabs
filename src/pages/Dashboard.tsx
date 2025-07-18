@@ -306,6 +306,13 @@ const Dashboard: React.FC = () => {
           </div>
         );
       
+      case 'blog':
+        return (
+          <div className="space-y-6">
+            <BlogManagement />
+          </div>
+        );
+      
       case 'finance':
       case 'finance-dashboard':
       case 'finance-revenue':

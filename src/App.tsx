@@ -52,6 +52,7 @@ function App() {
   return (
     <AuthProvider>
       <TrainingProvider>
+      <BlogProvider>
       <AboutProvider>
         <SettingsProvider>
           <CategoryProvider>
@@ -123,3 +124,5 @@ function App() {
 }
 
 export default App;
+  )
+}
