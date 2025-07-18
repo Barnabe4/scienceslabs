@@ -935,6 +935,10 @@ const WebmailManagement = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
       {/* Account Configuration Modal */}
       {showAccountConfig && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1048,7 +1052,7 @@ Email: ${accountConfig.email}`}
                     />
                   </div>
                 </div>
-          </div>
+
                 {/* Configuration serveur */}
                 <div className="space-y-6">
                   <div>
@@ -1138,7 +1142,7 @@ Email: ${accountConfig.email}`}
                       </div>
                     </div>
                   </div>
-        </div>
+
                   {/* Réponse automatique */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -1188,7 +1192,7 @@ Email: ${accountConfig.email}`}
                       )}
                     </div>
                   </div>
-      )}
+
                   {/* Test de connexion */}
                   <div className="bg-gray-50 rounded-lg p-4">
                     <h4 className="font-medium text-gray-900 mb-3 flex items-center">
