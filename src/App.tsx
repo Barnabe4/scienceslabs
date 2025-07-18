@@ -19,7 +19,7 @@ import { ManagementProvider } from './context/ManagementContext';
 import { CategoryProvider } from './context/CategoryContext';
 import { DashboardProvider } from './context/DashboardContext';
 import { OrderProvider } from './context/OrderContext';
-import { SettingsProvider } from './context/SettingsProvider';
+import { SettingsProvider } from './context/SettingsContext';
 import { QuoteProvider } from './context/QuoteContext';
 import { AboutProvider } from './context/AboutContext';
 import { TrainingProvider } from './context/TrainingContext';
