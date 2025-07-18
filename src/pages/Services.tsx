@@ -1,10 +1,46 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Truck, HeadphonesIcon, Award, Users, BookOpen, Wrench, Shield, Globe } from 'lucide-react';
+import { Truck, HeadphonesIcon, Award, Users, BookOpen, Wrench, Shield, Globe, Target, Eye, Heart } from 'lucide-react';
 import QuoteRequestModal from '../components/QuoteRequestModal';
 
 const Services = () => {
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+
+  const missionVisionValues = [
+    {
+      icon: '🎯',
+      title: 'Notre Mission',
+      description: 'Démocratiser l\'accès aux équipements scientifiques de qualité pour tous les établissements éducatifs en Afrique de l\'Ouest',
+      details: [
+        'Fournir des équipements scientifiques de haute qualité',
+        'Rendre la science accessible à tous les établissements',
+        'Accompagner les enseignants dans leurs projets pédagogiques',
+        'Contribuer au développement de l\'éducation scientifique'
+      ]
+    },
+    {
+      icon: '👁️',
+      title: 'Notre Vision',
+      description: 'Devenir le partenaire de référence pour l\'équipement de laboratoires scolaires et universitaires en Afrique de l\'Ouest d\'ici 2030',
+      details: [
+        'Leader régional en équipements scientifiques éducatifs',
+        'Réseau de distribution dans toute l\'Afrique de l\'Ouest',
+        'Innovation constante dans nos solutions',
+        'Excellence reconnue par nos clients'
+      ]
+    },
+    {
+      icon: '💎',
+      title: 'Nos Valeurs',
+      description: 'Les principes qui guident notre action quotidienne et notre relation avec nos clients',
+      details: [
+        'Qualité : Excellence dans tous nos produits et services',
+        'Innovation : Solutions modernes et adaptées',
+        'Service : Accompagnement personnalisé de nos clients',
+        'Engagement : Responsabilité envers l\'éducation africaine'
+      ]
+    }
+  ];
 
   const mainServices = [
     {
@@ -81,51 +117,92 @@ const Services = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Nos Services</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">À propos de Sciences Labs</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Bien plus qu'un simple fournisseur, Sciences Labs vous accompagne dans tous vos projets éducatifs
+            Découvrez qui nous sommes, notre mission et comment nous accompagnons l'éducation scientifique en Afrique de l'Ouest
           </p>
         </div>
 
-        {/* Main Services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {mainServices.map((service, index) => {
-            const IconComponent = service.icon;
-            return (
+        {/* Mission, Vision, Valeurs */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Mission, Vision & Valeurs</h2>
+            <p className="text-xl text-gray-600">Les fondements de notre engagement</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {missionVisionValues.map((item, index) => (
               <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <div className="p-8">
-                  <div className="flex items-center mb-6">
-                    <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mr-4">
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900">{service.title}</h3>
-                      <p className="text-gray-600 mt-1">{service.description}</p>
-                    </div>
+                  <div className="text-center mb-6">
+                    <div className="text-6xl mb-4">{item.icon}</div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
                   </div>
                   <ul className="space-y-3">
-                    {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-gray-700">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
-                        {feature}
+                    {item.details.map((detail, detailIndex) => (
+                      <li key={detailIndex} className="flex items-start text-gray-700">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                        <span className="text-sm">{detail}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        </section>
 
-        {/* Additional Services */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Services Complémentaires</h2>
+        {/* Nos Services */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Nos Services</h2>
+            <p className="text-xl text-gray-600">Un accompagnement complet pour vos projets éducatifs</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {mainServices.map((service, index) => {
+              const IconComponent = service.icon;
+              return (
+                <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                  <div className="p-8">
+                    <div className="flex items-center mb-6">
+                      <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mr-4">
+                        <IconComponent className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">{service.title}</h3>
+                        <p className="text-gray-600 mt-1">{service.description}</p>
+                      </div>
+                    </div>
+                    <ul className="space-y-3">
+                      {service.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center text-gray-700">
+                          <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Services Complémentaires */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Services Complémentaires</h2>
+            <p className="text-xl text-gray-600">Des services additionnels pour répondre à tous vos besoins</p>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {additionalServices.map((service, index) => {
               const IconComponent = service.icon;
               return (
                 <div key={index} className="bg-white rounded-lg shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <IconComponent className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{service.title}</h3>
@@ -134,62 +211,93 @@ const Services = () => {
               );
             })}
           </div>
-        </div>
+        </section>
 
-        {/* Process Section */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Notre Processus</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              { step: '01', title: 'Consultation', description: 'Analyse de vos besoins spécifiques' },
-              { step: '02', title: 'Devis', description: 'Proposition personnalisée et détaillée' },
-              { step: '03', title: 'Livraison', description: 'Transport sécurisé et installation' },
-              { step: '04', title: 'Formation', description: 'Formation et support continu' }
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-lg">{item.step}</span>
+        {/* Notre Processus */}
+        <section className="mb-16">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Notre Processus</h2>
+              <p className="text-xl text-gray-600">Comment nous vous accompagnons de A à Z</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {[
+                { 
+                  step: '01', 
+                  title: 'Consultation', 
+                  description: 'Analyse approfondie de vos besoins spécifiques et de votre environnement pédagogique',
+                  icon: '🔍'
+                },
+                { 
+                  step: '02', 
+                  title: 'Devis', 
+                  description: 'Proposition personnalisée et détaillée avec recommandations d\'experts',
+                  icon: '📋'
+                },
+                { 
+                  step: '03', 
+                  title: 'Livraison', 
+                  description: 'Transport sécurisé, installation professionnelle et mise en service',
+                  icon: '🚚'
+                },
+                { 
+                  step: '04', 
+                  title: 'Formation', 
+                  description: 'Formation complète de vos équipes et support technique continu',
+                  icon: '🎓'
+                }
+              ].map((item, index) => (
+                <div key={index} className="text-center">
+                  <div className="relative mb-6">
+                    <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <span className="text-white font-bold text-lg">{item.step}</span>
+                    </div>
+                    <div className="text-4xl mb-2">{item.icon}</div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600 text-sm">{item.description}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* CTA Section */}
-        <div className="bg-blue-600 rounded-xl p-8 text-center text-white mb-16">
-          <h2 className="text-3xl font-bold mb-4">Prêt à démarrer votre projet ?</h2>
-          <p className="text-xl text-blue-100 mb-6">
-            Contactez notre équipe d'experts pour discuter de vos besoins spécifiques
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/contact"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center justify-center"
-            >
-              Demander un devis
-            </Link>
-            <button
-              onClick={() => setShowQuoteModal(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center justify-center"
-            >
-              Devis rapide
-            </button>
-            <Link
-              to="/contact"
-              className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition-all inline-flex items-center justify-center"
-            >
-              Nous contacter
-            </Link>
+        <section className="mb-16">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 text-center text-white">
+            <h2 className="text-3xl font-bold mb-4">Prêt à démarrer votre projet ?</h2>
+            <p className="text-xl text-blue-100 mb-6 max-w-2xl mx-auto">
+              Contactez notre équipe d'experts pour discuter de vos besoins spécifiques et découvrir comment nous pouvons vous accompagner
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/contact"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center justify-center"
+              >
+                Demander un devis
+              </Link>
+              <button
+                onClick={() => setShowQuoteModal(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center justify-center"
+              >
+                Devis rapide
+              </button>
+              <Link
+                to="/contact"
+                className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition-all inline-flex items-center justify-center"
+              >
+                Nous contacter
+              </Link>
+            </div>
           </div>
-          
-          {/* Modal de demande de devis */}
-          <QuoteRequestModal 
-            isOpen={showQuoteModal} 
-            onClose={() => setShowQuoteModal(false)} 
-          />
-        </div>
+        </section>
+        
+        {/* Modal de demande de devis */}
+        <QuoteRequestModal 
+          isOpen={showQuoteModal} 
+          onClose={() => setShowQuoteModal(false)} 
+        />
       </div>
     </div>
   );
