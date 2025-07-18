@@ -4,7 +4,7 @@ import {
   FileText, Plus, Search, Filter, Edit, Trash2, Eye, Image, 
   Calendar, User, Tag, ChevronDown, MoreHorizontal, 
   Download, Upload, Printer, Star, Clock, CheckCircle,
-  XCircle, AlertTriangle, Settings, Send, Copy
+  XCircle, AlertTriangle, Settings, Send, Copy, BarChart3
 } from 'lucide-react';
 import { useBlog } from '../context/BlogContext';
 
