@@ -95,11 +95,11 @@ const Blog = () => {
                     </div>
                     <div className="flex items-center mr-6">
                       <Calendar className="w-4 h-4 mr-2" />
-                      {new Date(article.publishDate).toLocaleDateString('fr-FR')}
+                      {new Date(featuredArticle.publishDate).toLocaleDateString('fr-FR')}
                     </div>
                     <div className="flex items-center">
                       <Clock className="w-4 h-4 mr-2" />
-                      {article.readTime} min
+                      {featuredArticle.readTime} min
                     </div>
                   </div>
                   <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center">
