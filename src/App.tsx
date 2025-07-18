@@ -49,7 +49,6 @@ import ReportsManagement from './pages/ReportsManagement';
 import AboutManagement from './pages/AboutManagement';
 import TrainingManagement from './pages/TrainingManagement';
 import BlogManagement from './pages/BlogManagement';
-import BlogManagement from './pages/BlogManagement';
 
 function App() {
   return (
