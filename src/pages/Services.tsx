@@ -159,7 +159,7 @@ const Services = () => {
 
         {/* CTA Section */}
         <div className="bg-blue-600 rounded-xl p-8 text-center text-white mb-16">
-          <h2 className="text-3xl font-bold mb-4">Besoin d'un service personnalisé ?</h2>
+          <h2 className="text-3xl font-bold mb-4">Prêt à démarrer votre projet ?</h2>
           <p className="text-xl text-blue-100 mb-6">
             Contactez notre équipe d'experts pour discuter de vos besoins spécifiques
           </p>
