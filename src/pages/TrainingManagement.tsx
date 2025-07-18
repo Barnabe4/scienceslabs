@@ -536,7 +536,7 @@ const TrainingManagement = () => {
     return participants.filter(p => p.trainingId === trainingId);
   };
 
-  const getStatusColor = (status: string) => {
+  const getParticipantStatusColor = (status: string) => {
     switch (status) {
       case 'registered': return 'bg-blue-100 text-blue-800';
       case 'confirmed': return 'bg-green-100 text-green-800';
@@ -1267,36 +1267,6 @@ const TrainingManagement = () => {
                   </p>
                 </div>
               </div>
-      {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            <Calendar className="w-8 h-8 text-blue-600 mr-4" />
-            <div className="text-left">
-              <h4 className="font-medium text-gray-900">Programmer une session</h4>
-              <p className="text-sm text-gray-600">Planifier de nouvelles dates</p>
-            </div>
-          </button>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            <Send className="w-8 h-8 text-green-600 mr-4" />
-            <div className="text-left">
-              <h4 className="font-medium text-gray-900">Envoyer invitations</h4>
-              <p className="text-sm text-gray-600">Inviter des participants</p>
-            </div>
-          </button>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            <Settings className="w-8 h-8 text-purple-600 mr-4" />
-            <div className="text-left">
-              <h4 className="font-medium text-gray-900">Paramètres formations</h4>
-              <p className="text-sm text-gray-600">Configurer les options</p>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
               {/* Liste des participants */}
               <div className="overflow-x-auto">
@@ -1334,6 +1304,45 @@ const TrainingManagement = () => {
                               setParticipants(prev => prev.map(p => 
                                 p.id === participant.id 
                                   ? { ...p, status: e.target.value as Participant['status'] }
+                                  : p
+                              ));
+                            }}
+                            className={`text-xs font-semibold rounded-full px-2 py-1 border-0 ${getParticipantStatusColor(participant.status)}`}
+                          >
+                            <option value="registered">Inscrit</option>
+                            <option value="confirmed">Confirmé</option>
+                            <option value="attended">Présent</option>
+                            <option value="cancelled">Annulé</option>
+                          </select>
+                        </td>
+                        <td className="px-6 py-4 text-sm font-medium">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => alert(`Envoyer email à ${participant.name}`)}
+                              className="text-blue-600 hover:text-blue-900"
+                              title="Envoyer email"
+                            >
+                              <Mail className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (window.confirm(`Supprimer ${participant.name} de la formation ?`)) {
+                                  setParticipants(prev => prev.filter(p => p.id !== participant.id));
+                                }
+                              }}
+                              className="text-red-600 hover:text-red-900"
+                              title="Supprimer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
               {getParticipantsForTraining(selectedTrainingForParticipants).length === 0 && (
                 <div className="text-center py-8">
                   <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -1362,7 +1371,7 @@ const TrainingManagement = () => {
           </div>
         </div>
       )}
-                                  : p
+
       {/* Schedule Session Modal */}
       {showScheduleModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1432,7 +1441,7 @@ const TrainingManagement = () => {
           </div>
         </div>
       )}
-                              ));
+
       {/* Invite Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1495,7 +1504,7 @@ const TrainingManagement = () => {
           </div>
         </div>
       )}
-                            }}
+
       {/* Settings Modal */}
       {showSettingsModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1580,42 +1589,45 @@ const TrainingManagement = () => {
           </div>
         </div>
       )}
-                            className={`text-xs font-semibold rounded-full px-2 py-1 border-0 ${getStatusColor(participant.status)}`}
-                          >
-                            <option value="registered">Inscrit</option>
-                            <option value="confirmed">Confirmé</option>
-                            <option value="attended">Présent</option>
-                            <option value="cancelled">Annulé</option>
+
+      {/* Quick Actions */}
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
             onClick={handleScheduleSession}
-                          </select>
-                        </td>
-                        <td className="px-6 py-4 text-sm font-medium">
-                          <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => alert(`Envoyer email à ${participant.name}`)}
-                              className="text-blue-600 hover:text-blue-900"
-                              title="Envoyer email"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <Calendar className="w-8 h-8 text-blue-600 mr-4" />
+            <div className="text-left">
+              <h4 className="font-medium text-gray-900">Programmer une session</h4>
+              <p className="text-sm text-gray-600">Planifier de nouvelles dates</p>
+            </div>
+          </button>
+          <button
             onClick={handleSendInvitations}
-                            >
-                              <Mail className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                if (window.confirm(`Supprimer ${participant.name} de la formation ?`)) {
-                                  setParticipants(prev => prev.filter(p => p.id !== participant.id));
-                                }
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <Send className="w-8 h-8 text-green-600 mr-4" />
+            <div className="text-left">
+              <h4 className="font-medium text-gray-900">Envoyer invitations</h4>
+              <p className="text-sm text-gray-600">Inviter des participants</p>
+            </div>
+          </button>
+          <button
             onClick={handleTrainingSettings}
-                              }}
-                              className="text-red-600 hover:text-red-900"
-                              title="Supprimer"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <Settings className="w-8 h-8 text-purple-600 mr-4" />
+            <div className="text-left">
+              <h4 className="font-medium text-gray-900">Paramètres formations</h4>
+              <p className="text-sm text-gray-600">Configurer les options</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default TrainingManagement;
