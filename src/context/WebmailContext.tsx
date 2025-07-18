@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import EmailService, { createEmailService } from '../services/emailService';
 
 interface EmailAttachment {
   id: string;
@@ -79,6 +80,9 @@ interface WebmailContextType {
   selectedEmails: string[];
   currentFolder: string;
   searchQuery: string;
+  emailServices: Map<string, EmailService>;
+  isConnecting: boolean;
+  connectionStatus: Map<string, 'connected' | 'disconnected' | 'error'>;
   
   // Email operations
   sendEmail: (email: Omit<Email, 'id' | 'date' | 'read' | 'folder'>) => void;
@@ -89,6 +93,12 @@ interface WebmailContextType {
   markAsRead: (emailIds: string[], read: boolean) => void;
   markAsStarred: (emailIds: string[], starred: boolean) => void;
   markAsImportant: (emailIds: string[], important: boolean) => void;
+  
+  // Real email operations
+  sendRealEmail: (accountId: string, emailData: any) => Promise<boolean>;
+  fetchRealEmails: (accountId: string, folder?: string) => Promise<void>;
+  testEmailConnection: (accountId: string, password: string) => Promise<boolean>;
+  syncAllAccounts: () => Promise<void>;
   
   // Account management
   addAccount: (account: Omit<EmailAccount, 'id'>) => void;
@@ -114,6 +124,9 @@ export const WebmailProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
   const [currentFolder, setCurrentFolder] = useState('inbox');
   const [searchQuery, setSearchQuery] = useState('');
+  const [emailServices, setEmailServices] = useState<Map<string, EmailService>>(new Map());
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<Map<string, 'connected' | 'disconnected' | 'error'>>(new Map());
 
   const [accounts, setAccounts] = useState<EmailAccount[]>([
     {
@@ -231,6 +244,35 @@ Sciences Labs
   const [emails, setEmails] = useState<Email[]>([
     {
       id: '1',
+      from: 'hounkpatibarnabe@gmail.com',
+      to: ['admin@scienceslabs.com'],
+      subject: 'Demande d\'information sur vos produits',
+      body: `Bonjour Sciences Labs,
+
+Je suis intéressé par vos équipements de laboratoire pour notre établissement scolaire.
+
+Pourriez-vous me faire parvenir des informations sur :
+- Vos microscopes binoculaires
+- Les équipements de sécurité
+- Les conditions de livraison au Mali
+
+Merci d'avance pour votre réponse.
+
+Cordialement,
+Barnabé Hounkpati
+Email: hounkpatibarnabe@gmail.com`,
+      isHtml: false,
+      attachments: [],
+      date: '2024-01-20T10:30:00Z',
+      read: false,
+      starred: false,
+      important: true,
+      folder: 'inbox',
+      labels: ['prospect', 'demande-info'],
+      priority: 'high'
+    },
+    {
+      id: '4',
       from: 'contact@lyceetechnique.ml',
       to: ['admin@scienceslabs.com'],
       subject: 'Demande de devis pour équipement laboratoire',
@@ -248,13 +290,13 @@ Dr. Amadou Traoré
 Directeur - Lycée Technique de Bamako`,
       isHtml: false,
       attachments: [],
-      date: '2024-01-20T10:30:00Z',
-      read: false,
+      date: '2024-01-19T08:15:00Z',
+      read: true,
       starred: false,
-      important: true,
+      important: false,
       folder: 'inbox',
       labels: ['client', 'devis'],
-      priority: 'high'
+      priority: 'normal'
     },
     {
       id: '2',
@@ -333,6 +375,134 @@ Administrateur Sciences Labs`,
       folder: 'sent'
     };
     setEmails(prev => [...prev, newEmail]);
+  };
+
+  // Envoyer un vrai email via SMTP
+  const sendRealEmail = async (accountId: string, emailData: any): Promise<boolean> => {
+    try {
+      setIsConnecting(true);
+      const service = emailServices.get(accountId);
+      
+      if (!service) {
+        throw new Error('Service email non configuré pour ce compte');
+      }
+
+      const success = await service.sendEmail({
+        to: emailData.to,
+        cc: emailData.cc,
+        bcc: emailData.bcc,
+        subject: emailData.subject,
+        text: emailData.body,
+        html: emailData.isHtml ? emailData.body : undefined,
+        attachments: emailData.attachments
+      });
+
+      if (success) {
+        // Ajouter l'email aux envoyés
+        const sentEmail: Email = {
+          ...emailData,
+          id: Date.now().toString(),
+          date: new Date().toISOString(),
+          read: true,
+          folder: 'sent'
+        };
+        setEmails(prev => [...prev, sentEmail]);
+      }
+
+      return success;
+    } catch (error) {
+      console.error('Erreur envoi email:', error);
+      throw error;
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  // Récupérer les vrais emails via IMAP
+  const fetchRealEmails = async (accountId: string, folder: string = 'INBOX'): Promise<void> => {
+    try {
+      setIsConnecting(true);
+      const service = emailServices.get(accountId);
+      
+      if (!service) {
+        throw new Error('Service email non configuré pour ce compte');
+      }
+
+      const fetchedEmails = await service.fetchEmails(folder);
+      
+      // Convertir et ajouter les nouveaux emails
+      const newEmails = fetchedEmails.map(email => ({
+        ...email,
+        folder: folder.toLowerCase() as Email['folder'],
+        starred: false,
+        important: false,
+        labels: [],
+        replyTo: email.from,
+        priority: 'normal' as const
+      }));
+
+      setEmails(prev => {
+        // Éviter les doublons
+        const existingIds = prev.map(e => e.id);
+        const uniqueNewEmails = newEmails.filter(e => !existingIds.includes(e.id));
+        return [...prev, ...uniqueNewEmails];
+      });
+
+      setConnectionStatus(prev => new Map(prev.set(accountId, 'connected')));
+    } catch (error) {
+      console.error('Erreur récupération emails:', error);
+      setConnectionStatus(prev => new Map(prev.set(accountId, 'error')));
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  // Tester la connexion email
+  const testEmailConnection = async (accountId: string, password: string): Promise<boolean> => {
+    try {
+      setIsConnecting(true);
+      const account = accounts.find(a => a.id === accountId);
+      
+      if (!account) {
+        throw new Error('Compte non trouvé');
+      }
+
+      const service = createEmailService(account.email, password);
+      const isConnected = await service.testSMTPConnection();
+      
+      if (isConnected) {
+        setEmailServices(prev => new Map(prev.set(accountId, service)));
+        setConnectionStatus(prev => new Map(prev.set(accountId, 'connected')));
+      } else {
+        setConnectionStatus(prev => new Map(prev.set(accountId, 'error')));
+      }
+
+      return isConnected;
+    } catch (error) {
+      console.error('Erreur test connexion:', error);
+      setConnectionStatus(prev => new Map(prev.set(accountId, 'error')));
+      return false;
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  // Synchroniser tous les comptes
+  const syncAllAccounts = async (): Promise<void> => {
+    try {
+      setIsConnecting(true);
+      const syncPromises = Array.from(emailServices.entries()).map(([accountId, service]) => 
+        service.syncEmails().catch(error => 
+          console.error(`Erreur sync compte ${accountId}:`, error)
+        )
+      );
+      
+      await Promise.all(syncPromises);
+    } catch (error) {
+      console.error('Erreur synchronisation globale:', error);
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
   const replyToEmail = (emailId: string, reply: Partial<Email>) => {
@@ -479,7 +649,14 @@ Administrateur Sciences Labs`,
         selectedEmails,
         currentFolder,
         searchQuery,
+        emailServices,
+        isConnecting,
+        connectionStatus,
         sendEmail,
+        sendRealEmail,
+        fetchRealEmails,
+        testEmailConnection,
+        syncAllAccounts,
         replyToEmail,
         forwardEmail,
         deleteEmails,
