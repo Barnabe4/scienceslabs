@@ -21,7 +21,8 @@ import {
   Edit,
   Trash2,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  BookOpen
 } from 'lucide-react';
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
