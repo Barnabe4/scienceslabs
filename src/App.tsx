@@ -19,10 +19,11 @@ import { ManagementProvider } from './context/ManagementContext';
 import { CategoryProvider } from './context/CategoryContext';
 import { DashboardProvider } from './context/DashboardContext';
 import { OrderProvider } from './context/OrderContext';
-import { SettingsProvider } from './context/SettingsContext';
+import { SettingsProvider } from './context/SettingsProvider';
 import { QuoteProvider } from './context/QuoteContext';
 import { AboutProvider } from './context/AboutContext';
 import { TrainingProvider } from './context/TrainingContext';
+import { BlogProvider } from './context/BlogContext';
 import OrderManagement from './pages/OrderManagement';
 import UserManagement from './pages/UserManagement';
 import AddUser from './pages/AddUser';
@@ -47,6 +48,7 @@ import FinancialSettings from './pages/FinancialSettings';
 import ReportsManagement from './pages/ReportsManagement';
 import AboutManagement from './pages/AboutManagement';
 import TrainingManagement from './pages/TrainingManagement';
+import BlogManagement from './pages/BlogManagement';
 
 function App() {
   return (
@@ -126,5 +128,3 @@ function App() {
 }
 
 export default App;
-  )
-}
