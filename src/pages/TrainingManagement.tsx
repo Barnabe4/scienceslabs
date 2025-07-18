@@ -3,7 +3,7 @@ import {
   BookOpen, Plus, Edit, Trash2, Eye, Calendar, Users, MapPin, 
   Clock, Award, Search, Filter, ChevronDown, Save, X, 
   DollarSign, Star, CheckCircle, AlertTriangle, Settings,
-  ArrowUp, ArrowDown, Copy, Send, Download
+  ArrowUp, ArrowDown, Copy, Send, Download, UserPlus, Mail
 } from 'lucide-react';
 
 interface Training {
@@ -33,6 +33,17 @@ interface Training {
   updatedAt: string;
 }
 
+interface Participant {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  establishment: string;
+  registrationDate: string;
+  status: 'registered' | 'confirmed' | 'attended' | 'cancelled';
+  trainingId: number;
+}
+
 const TrainingManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -41,6 +52,11 @@ const TrainingManagement = () => {
   const [showAddTraining, setShowAddTraining] = useState(false);
   const [editingTraining, setEditingTraining] = useState<number | null>(null);
   const [selectedTrainings, setSelectedTrainings] = useState<number[]>([]);
+  const [showParticipants, setShowParticipants] = useState(false);
+  const [selectedTrainingForParticipants, setSelectedTrainingForParticipants] = useState<number | null>(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const [trainings, setTrainings] = useState<Training[]>([
     {
@@ -146,6 +162,39 @@ const TrainingManagement = () => {
       reviews: 0,
       createdAt: '2024-01-20T11:00:00Z',
       updatedAt: '2024-01-20T11:00:00Z'
+    }
+  ]);
+
+  const [participants, setParticipants] = useState<Participant[]>([
+    {
+      id: 1,
+      name: 'Dr. Amadou Keita',
+      email: 'a.keita@lycee-bamako.ml',
+      phone: '+223 70 12 34 56',
+      establishment: 'Lycée Technique de Bamako',
+      registrationDate: '2024-01-15T10:00:00Z',
+      status: 'confirmed',
+      trainingId: 1
+    },
+    {
+      id: 2,
+      name: 'Prof. Marie Diallo',
+      email: 'm.diallo@univ-ouaga.bf',
+      phone: '+226 70 98 76 54',
+      establishment: 'Université de Ouagadougou',
+      registrationDate: '2024-01-18T14:30:00Z',
+      status: 'registered',
+      trainingId: 1
+    },
+    {
+      id: 3,
+      name: 'M. Ibrahim Touré',
+      email: 'i.toure@college-abidjan.ci',
+      phone: '+225 07 11 22 33',
+      establishment: 'Collège Moderne Abidjan',
+      registrationDate: '2024-01-20T09:15:00Z',
+      status: 'registered',
+      trainingId: 2
     }
   ]);
 
@@ -466,6 +515,47 @@ const TrainingManagement = () => {
     alert('Formation mise à jour avec succès !');
   };
 
+  const handleScheduleSession = () => {
+    setShowScheduleModal(true);
+  };
+
+  const handleSendInvitations = () => {
+    setShowInviteModal(true);
+  };
+
+  const handleTrainingSettings = () => {
+    setShowSettingsModal(true);
+  };
+
+  const handleViewParticipants = (trainingId: number) => {
+    setSelectedTrainingForParticipants(trainingId);
+    setShowParticipants(true);
+  };
+
+  const getParticipantsForTraining = (trainingId: number) => {
+    return participants.filter(p => p.trainingId === trainingId);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'registered': return 'bg-blue-100 text-blue-800';
+      case 'confirmed': return 'bg-green-100 text-green-800';
+      case 'attended': return 'bg-purple-100 text-purple-800';
+      case 'cancelled': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'registered': return 'Inscrit';
+      case 'confirmed': return 'Confirmé';
+      case 'attended': return 'Présent';
+      case 'cancelled': return 'Annulé';
+      default: return status;
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -741,6 +831,13 @@ const TrainingManagement = () => {
                         title="Modifier"
                       >
                         <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleViewParticipants(training.id)}
+                        className="text-purple-600 hover:text-purple-900"
+                        title="Voir participants"
+                      >
+                        <Users className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDuplicateTraining(training.id)}
@@ -1123,6 +1220,53 @@ const TrainingManagement = () => {
         </div>
       )}
 
+      {/* Participants Modal */}
+      {showParticipants && selectedTrainingForParticipants && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Participants - {trainings.find(t => t.id === selectedTrainingForParticipants)?.title}
+              </h2>
+              <button
+                onClick={() => {
+                  setShowParticipants(false);
+                  setSelectedTrainingForParticipants(null);
+                }}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              {/* Stats participants */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h4 className="font-medium text-blue-900">Total Inscrits</h4>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {getParticipantsForTraining(selectedTrainingForParticipants).length}
+                  </p>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-medium text-green-900">Confirmés</h4>
+                  <p className="text-2xl font-bold text-green-600">
+                    {getParticipantsForTraining(selectedTrainingForParticipants).filter(p => p.status === 'confirmed').length}
+                  </p>
+                </div>
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h4 className="font-medium text-purple-900">Présents</h4>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {getParticipantsForTraining(selectedTrainingForParticipants).filter(p => p.status === 'attended').length}
+                  </p>
+                </div>
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <h4 className="font-medium text-red-900">Annulés</h4>
+                  <p className="text-2xl font-bold text-red-600">
+                    {getParticipantsForTraining(selectedTrainingForParticipants).filter(p => p.status === 'cancelled').length}
+                  </p>
+                </div>
+              </div>
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
@@ -1154,4 +1298,324 @@ const TrainingManagement = () => {
   );
 };
 
+              {/* Liste des participants */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Participant</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Établissement</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Inscription</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {getParticipantsForTraining(selectedTrainingForParticipants).map((participant) => (
+                      <tr key={participant.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-gray-900">{participant.name}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900">{participant.email}</div>
+                          <div className="text-sm text-gray-500">{participant.phone}</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          {participant.establishment}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {new Date(participant.registrationDate).toLocaleDateString('fr-FR')}
+                        </td>
+                        <td className="px-6 py-4">
+                          <select
+                            value={participant.status}
+                            onChange={(e) => {
+                              setParticipants(prev => prev.map(p => 
+                                p.id === participant.id 
+                                  ? { ...p, status: e.target.value as Participant['status'] }
+              {getParticipantsForTraining(selectedTrainingForParticipants).length === 0 && (
+                <div className="text-center py-8">
+                  <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun participant</h3>
+                  <p className="text-gray-500">Cette formation n'a pas encore de participants inscrits.</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex items-center justify-end space-x-4 p-6 border-t">
+              <button
+                onClick={() => alert('Export CSV des participants')}
+                className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export CSV
+              </button>
+              <button
+                onClick={() => alert('Ajouter un participant manuellement')}
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                Ajouter participant
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+                                  : p
+      {/* Schedule Session Modal */}
+      {showScheduleModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-md w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900">Programmer une session</h2>
+              <button
+                onClick={() => setShowScheduleModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Formation</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Sélectionner une formation</option>
+                    {trainings.filter(t => t.status === 'active').map(training => (
+                      <option key={training.id} value={training.id}>{training.title}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
+                  <input
+                    type="date"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Lieu</label>
+                  <input
+                    type="text"
+                    placeholder="Lieu de la formation"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                  <textarea
+                    rows={3}
+                    placeholder="Notes spéciales pour cette session"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end space-x-4 p-6 border-t">
+              <button
+                onClick={() => setShowScheduleModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  alert('Session programmée avec succès !');
+                  setShowScheduleModal(false);
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Programmer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+                              ));
+      {/* Invite Modal */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-md w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900">Envoyer des invitations</h2>
+              <button
+                onClick={() => setShowInviteModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Formation</label>
+                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Sélectionner une formation</option>
+                    {trainings.filter(t => t.status === 'active').map(training => (
+                      <option key={training.id} value={training.id}>{training.title}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Destinataires</label>
+                  <textarea
+                    rows={4}
+                    placeholder="Entrez les emails séparés par des virgules"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Message personnalisé</label>
+                  <textarea
+                    rows={3}
+                    placeholder="Message d'invitation personnalisé"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end space-x-4 p-6 border-t">
+              <button
+                onClick={() => setShowInviteModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  alert('Invitations envoyées avec succès !');
+                  setShowInviteModal(false);
+                }}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Envoyer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+                            }}
+      {/* Settings Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900">Paramètres des formations</h2>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Paramètres généraux</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium text-gray-900">Inscriptions automatiques</h4>
+                        <p className="text-sm text-gray-600">Accepter automatiquement les inscriptions</p>
+                      </div>
+                      <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium text-gray-900">Notifications email</h4>
+                        <p className="text-sm text-gray-600">Envoyer des notifications par email</p>
+                      </div>
+                      <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" defaultChecked />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium text-gray-900">Rappels automatiques</h4>
+                        <p className="text-sm text-gray-600">Envoyer des rappels avant la formation</p>
+                      </div>
+                      <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" defaultChecked />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Modèles d'emails</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Email de confirmation</label>
+                      <textarea
+                        rows={3}
+                        defaultValue="Bonjour {nom}, votre inscription à la formation {formation} a été confirmée."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Email de rappel</label>
+                      <textarea
+                        rows={3}
+                        defaultValue="Rappel : votre formation {formation} aura lieu le {date} à {lieu}."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end space-x-4 p-6 border-t">
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => {
+                  alert('Paramètres sauvegardés avec succès !');
+                  setShowSettingsModal(false);
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Sauvegarder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+                            className={`text-xs font-semibold rounded-full px-2 py-1 border-0 ${getStatusColor(participant.status)}`}
+                          >
+                            <option value="registered">Inscrit</option>
+                            <option value="confirmed">Confirmé</option>
+                            <option value="attended">Présent</option>
+                            <option value="cancelled">Annulé</option>
+            onClick={handleScheduleSession}
+                          </select>
+                        </td>
+                        <td className="px-6 py-4 text-sm font-medium">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => alert(`Envoyer email à ${participant.name}`)}
+                              className="text-blue-600 hover:text-blue-900"
+                              title="Envoyer email"
+            onClick={handleSendInvitations}
+                            >
+                              <Mail className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (window.confirm(`Supprimer ${participant.name} de la formation ?`)) {
+                                  setParticipants(prev => prev.filter(p => p.id !== participant.id));
+                                }
+            onClick={handleTrainingSettings}
+                              }}
+                              className="text-red-600 hover:text-red-900"
+                              title="Supprimer"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 export default TrainingManagement;
