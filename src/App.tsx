@@ -43,6 +43,7 @@ import InvoiceManagement from './pages/InvoiceManagement';
 import FinancialReports from './pages/FinancialReports';
 import FinancialSettings from './pages/FinancialSettings';
 import ReportsManagement from './pages/ReportsManagement';
+import AboutManagement from './pages/AboutManagement';
 
 function App() {
   return (
@@ -96,6 +97,7 @@ function App() {
                             <Route path="/finance/rapports" element={<FinancialReports />} />
                             <Route path="/finance/parametres" element={<FinancialSettings />} />
                             <Route path="/admin/rapports" element={<ReportsManagement />} />
+                            <Route path="/admin/a-propos" element={<AboutManagement />} />
                           </Routes>
                         </main>
                         <Footer />
