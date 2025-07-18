@@ -49,6 +49,8 @@ import ReportsManagement from './pages/ReportsManagement';
 import AboutManagement from './pages/AboutManagement';
 import TrainingManagement from './pages/TrainingManagement';
 import BlogManagement from './pages/BlogManagement';
+import WebmailManagement from './pages/WebmailManagement';
+import { WebmailProvider } from './context/WebmailContext';
 
 function App() {
   return (
@@ -61,61 +63,63 @@ function App() {
             <DashboardProvider>
               <OrderProvider>
                 <QuoteProvider>
-                  <CartProvider>
-                    <ManagementProvider>
-                      <Router>
-                        <div className="min-h-screen bg-gray-50">
-                          <Header />
-                          <main>
-                            <Routes>
-                              <Route path="/" element={<Home />} />
-                              <Route path="/boutique" element={<Shop />} />
-                              <Route path="/produit/:id" element={<ProductDetail />} />
-                              <Route path="/services" element={<Services />} />
-                              <Route path="/formations" element={<Training />} />
-                              <Route path="/blog" element={<Blog />} />
-                              <Route path="/contact" element={<Contact />} />
-                              <Route path="/panier" element={<Cart />} />
-                              <Route path="/dashboard" element={<Dashboard />} />
-                              <Route path="/gestion" element={<Management />} />
-                              <Route path="/gestion-commandes" element={<OrderManagement />} />
-                              <Route path="/login" element={<Login />} />
-                              <Route path="/register" element={<Register />} />
-                              <Route path="/admin/utilisateurs" element={<UserManagement />} />
-                              <Route path="/admin/utilisateurs/ajouter" element={<AddUser />} />
-                              <Route path="/admin/utilisateurs/:id/editer" element={<EditUser />} />
-                              <Route path="/admin/utilisateurs/:id" element={<EditUser />} />
-                              <Route path="/admin/roles" element={<RoleManagement />} />
-                              <Route path="/admin/clients" element={<ClientManagement />} />
-                              <Route path="/admin/clients/ajouter" element={<AddClient />} />
-                              <Route path="/admin/clients/:id/fiche" element={<ClientProfile />} />
-                              <Route path="/admin/clients/:id/editer" element={<AddClient />} />
-                              <Route path="/admin/produits" element={<ProductManagement />} />
-                              <Route path="/admin/produits/ajouter" element={<AddProduct />} />
-                              <Route path="/admin/produits/:id/editer" element={<EditProduct />} />
-                              <Route path="/admin/produits/:id/preview" element={<ProductPreview />} />
-                              <Route path="/admin/categories" element={<CategoryManagement />} />
-                              <Route path="/admin/devis" element={<QuoteManagement />} />
-                              <Route path="/admin/factures" element={<InvoiceManagement />} />
-                              <Route path="/finance" element={<Finance />} />
-                              <Route path="/finance/dashboard" element={<FinancialDashboard />} />
-                              <Route path="/finance/revenus" element={<RevenueManagement />} />
-                              <Route path="/finance/depenses" element={<ExpenseManagement />} />
-                              <Route path="/finance/factures" element={<InvoiceManagement />} />
-                              <Route path="/finance/rapports" element={<FinancialReports />} />
-                              <Route path="/finance/parametres" element={<FinancialSettings />} />
-                              <Route path="/admin/rapports" element={<ReportsManagement />} />
-                              <Route path="/admin/a-propos" element={<AboutManagement />} />
-                              <Route path="/admin/formations" element={<TrainingManagement />} />
-                              <Route path="/admin/blog" element={<BlogManagement />} />
-                              <Route path="/admin/blog" element={<BlogManagement />} />
-                            </Routes>
-                          </main>
-                          <Footer />
-                        </div>
-                      </Router>
-                    </ManagementProvider>
-                  </CartProvider>
+                  <WebmailProvider>
+                    <CartProvider>
+                      <ManagementProvider>
+                        <Router>
+                          <div className="min-h-screen bg-gray-50">
+                            <Header />
+                            <main>
+                              <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/boutique" element={<Shop />} />
+                                <Route path="/produit/:id" element={<ProductDetail />} />
+                                <Route path="/services" element={<Services />} />
+                                <Route path="/formations" element={<Training />} />
+                                <Route path="/blog" element={<Blog />} />
+                                <Route path="/contact" element={<Contact />} />
+                                <Route path="/panier" element={<Cart />} />
+                                <Route path="/dashboard" element={<Dashboard />} />
+                                <Route path="/gestion" element={<Management />} />
+                                <Route path="/gestion-commandes" element={<OrderManagement />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/register" element={<Register />} />
+                                <Route path="/admin/utilisateurs" element={<UserManagement />} />
+                                <Route path="/admin/utilisateurs/ajouter" element={<AddUser />} />
+                                <Route path="/admin/utilisateurs/:id/editer" element={<EditUser />} />
+                                <Route path="/admin/utilisateurs/:id" element={<EditUser />} />
+                                <Route path="/admin/roles" element={<RoleManagement />} />
+                                <Route path="/admin/clients" element={<ClientManagement />} />
+                                <Route path="/admin/clients/ajouter" element={<AddClient />} />
+                                <Route path="/admin/clients/:id/fiche" element={<ClientProfile />} />
+                                <Route path="/admin/clients/:id/editer" element={<AddClient />} />
+                                <Route path="/admin/produits" element={<ProductManagement />} />
+                                <Route path="/admin/produits/ajouter" element={<AddProduct />} />
+                                <Route path="/admin/produits/:id/editer" element={<EditProduct />} />
+                                <Route path="/admin/produits/:id/preview" element={<ProductPreview />} />
+                                <Route path="/admin/categories" element={<CategoryManagement />} />
+                                <Route path="/admin/devis" element={<QuoteManagement />} />
+                                <Route path="/admin/factures" element={<InvoiceManagement />} />
+                                <Route path="/admin/webmail" element={<WebmailManagement />} />
+                                <Route path="/finance" element={<Finance />} />
+                                <Route path="/finance/dashboard" element={<FinancialDashboard />} />
+                                <Route path="/finance/revenus" element={<RevenueManagement />} />
+                                <Route path="/finance/depenses" element={<ExpenseManagement />} />
+                                <Route path="/finance/factures" element={<InvoiceManagement />} />
+                                <Route path="/finance/rapports" element={<FinancialReports />} />
+                                <Route path="/finance/parametres" element={<FinancialSettings />} />
+                                <Route path="/admin/rapports" element={<ReportsManagement />} />
+                                <Route path="/admin/a-propos" element={<AboutManagement />} />
+                                <Route path="/admin/formations" element={<TrainingManagement />} />
+                                <Route path="/admin/blog" element={<BlogManagement />} />
+                              </Routes>
+                            </main>
+                            <Footer />
+                          </div>
+                        </Router>
+                      </ManagementProvider>
+                    </CartProvider>
+                  </WebmailProvider>
                 </QuoteProvider>
               </OrderProvider>
             </DashboardProvider>

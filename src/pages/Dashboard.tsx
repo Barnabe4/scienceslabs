@@ -22,7 +22,8 @@ import {
   Trash2,
   ChevronDown,
   ChevronUp,
-  BookOpen
+  BookOpen,
+  Mail
 } from 'lucide-react';
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
@@ -37,6 +38,7 @@ import ReportsManagement from './ReportsManagement';
 import AboutManagement from './AboutManagement';
 import TrainingManagement from './TrainingManagement';
 import BlogManagement from './BlogManagement';
+import WebmailManagement from './WebmailManagement';
 
 interface MenuItem {
   id: string;
@@ -73,6 +75,7 @@ const Dashboard: React.FC = () => {
     { id: 'trainings', name: 'Formations', icon: BookOpen },
     { id: 'blog', name: 'Blog', icon: FileText },
     { id: 'about', name: 'À propos', icon: Users },
+    { id: 'webmail', name: 'Webmail', icon: Mail },
     { 
       id: 'finance', 
       name: 'Finances', 
@@ -315,10 +318,10 @@ const Dashboard: React.FC = () => {
           </div>
         );
       
-      case 'blog':
+      case 'webmail':
         return (
           <div className="space-y-6">
-            <BlogManagement />
+            <WebmailManagement />
           </div>
         );
       
