@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Inbox, Send, Edit3, Trash2, Archive, Star, Flag, Search, Filter, Plus, Settings, Paperclip, Reply, Forward, MoreHorizontal, RefreshCw, Eye, EyeOff, Download, Printer as Print, User, Calendar, Clock, ChevronDown, ChevronRight, X, AlertCircle, CheckCircle, Zap, Tag, Users, Phone, MapPin } from 'lucide-react';
+import { Mail, Inbox, Send, Edit3, Trash2, Archive, Star, Flag, Search, Filter, Plus, Settings, Paperclip, Reply, Forward, MoreHorizontal, RefreshCw, Eye, EyeOff, Download, Printer as Print, User, Calendar, Clock, ChevronDown, ChevronRight, X, AlertCircle, CheckCircle, Zap, Tag, Users, Phone, MapPin, Save, Key, Server, Shield } from 'lucide-react';
 import { useWebmail } from '../context/WebmailContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -33,6 +33,8 @@ const WebmailManagement = () => {
   const [showCompose, setShowCompose] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showAccountConfig, setShowAccountConfig] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<string | null>(null);
   const [composeMode, setComposeMode] = useState<'new' | 'reply' | 'forward'>('new');
   const [replyToEmailId, setReplyToEmailId] = useState<string | null>(null);
 
@@ -44,6 +46,23 @@ const WebmailManagement = () => {
     body: '',
     priority: 'normal' as 'low' | 'normal' | 'high',
     attachments: [] as File[]
+  });
+
+  const [accountConfig, setAccountConfig] = useState({
+    email: '',
+    name: '',
+    role: '',
+    password: '',
+    imapServer: 'mail.scienceslabs.com',
+    smtpServer: 'mail.scienceslabs.com',
+    imapPort: 993,
+    smtpPort: 587,
+    ssl: true,
+    signature: '',
+    autoReplyEnabled: false,
+    autoReplySubject: 'Réponse automatique',
+    autoReplyMessage: 'Merci pour votre message. Je vous répondrai dans les plus brefs délais.',
+    syncInterval: 5
   });
 
   // Initialiser le compte courant basé sur l'utilisateur connecté
@@ -177,6 +196,90 @@ const WebmailManagement = () => {
     alert('Email envoyé avec succès !');
   };
 
+  const handleSaveAccountConfig = () => {
+    if (editingAccount) {
+      updateAccount(editingAccount, {
+        email: accountConfig.email,
+        name: accountConfig.name,
+        role: accountConfig.role,
+        signature: accountConfig.signature,
+        autoReply: {
+          enabled: accountConfig.autoReplyEnabled,
+          subject: accountConfig.autoReplySubject,
+          message: accountConfig.autoReplyMessage
+        },
+        settings: {
+          imapServer: accountConfig.imapServer,
+          smtpServer: accountConfig.smtpServer,
+          port: accountConfig.smtpPort,
+          ssl: accountConfig.ssl,
+          syncInterval: accountConfig.syncInterval
+        }
+      });
+    } else {
+      addAccount({
+        email: accountConfig.email,
+        name: accountConfig.name,
+        role: accountConfig.role,
+        isActive: true,
+        signature: accountConfig.signature,
+        autoReply: {
+          enabled: accountConfig.autoReplyEnabled,
+          subject: accountConfig.autoReplySubject,
+          message: accountConfig.autoReplyMessage
+        },
+        settings: {
+          imapServer: accountConfig.imapServer,
+          smtpServer: accountConfig.smtpServer,
+          port: accountConfig.smtpPort,
+          ssl: accountConfig.ssl,
+          syncInterval: accountConfig.syncInterval
+        }
+      });
+    }
+    
+    setShowAccountConfig(false);
+    setEditingAccount(null);
+    setAccountConfig({
+      email: '',
+      name: '',
+      role: '',
+      password: '',
+      imapServer: 'mail.scienceslabs.com',
+      smtpServer: 'mail.scienceslabs.com',
+      imapPort: 993,
+      smtpPort: 587,
+      ssl: true,
+      signature: '',
+      autoReplyEnabled: false,
+      autoReplySubject: 'Réponse automatique',
+      autoReplyMessage: 'Merci pour votre message. Je vous répondrai dans les plus brefs délais.',
+      syncInterval: 5
+    });
+    alert('Configuration du compte sauvegardée avec succès !');
+  };
+
+  const handleEditAccount = (account: any) => {
+    setAccountConfig({
+      email: account.email,
+      name: account.name,
+      role: account.role,
+      password: '',
+      imapServer: account.settings.imapServer,
+      smtpServer: account.settings.smtpServer,
+      imapPort: 993,
+      smtpPort: account.settings.port,
+      ssl: account.settings.ssl,
+      signature: account.signature,
+      autoReplyEnabled: account.autoReply.enabled,
+      autoReplySubject: account.autoReply.subject,
+      autoReplyMessage: account.autoReply.message,
+      syncInterval: account.settings.syncInterval
+    });
+    setEditingAccount(account.id);
+    setShowAccountConfig(true);
+  };
+
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -215,8 +318,16 @@ const WebmailManagement = () => {
             <button
               onClick={() => setShowSettings(!showSettings)}
               className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100"
+             title="Paramètres"
             >
               <Settings className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setShowAccountConfig(true)}
+              className="p-2 text-blue-600 hover:text-blue-700 rounded-lg hover:bg-blue-100"
+              title="Configurer les comptes"
+            >
+              <Plus className="w-5 h-5" />
             </button>
           </div>
           
@@ -811,11 +922,310 @@ const WebmailManagement = () => {
                         >
                           {currentAccount?.id === account.id ? 'Actuel' : 'Utiliser'}
                         </button>
+                        <button
+                          onClick={() => handleEditAccount(account)}
+                          className="ml-2 p-1 text-blue-600 hover:text-blue-800"
+                          title="Configurer"
+                        >
+                          <Settings className="w-4 h-4" />
+                        </button>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
+            </div>
+      {/* Account Configuration Modal */}
+      {showAccountConfig && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {editingAccount ? 'Modifier le compte email' : 'Configurer un nouveau compte email'}
+              </h2>
+              <button
+                onClick={() => {
+                  setShowAccountConfig(false);
+                  setEditingAccount(null);
+                }}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Informations générales */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <User className="w-5 h-5 mr-2" />
+                      Informations du compte
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Adresse email *
+                        </label>
+                        <input
+                          type="email"
+                          value={accountConfig.email}
+                          onChange={(e) => setAccountConfig(prev => ({ ...prev, email: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="utilisateur@scienceslabs.com"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nom d'affichage *
+                        </label>
+                        <input
+                          type="text"
+                          value={accountConfig.name}
+                          onChange={(e) => setAccountConfig(prev => ({ ...prev, name: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Nom Prénom"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Rôle
+                        </label>
+                        <select
+                          value={accountConfig.role}
+                          onChange={(e) => setAccountConfig(prev => ({ ...prev, role: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                          <option value="">Sélectionner un rôle</option>
+                          <option value="admin">Administrateur</option>
+                          <option value="director">Directeur</option>
+                          <option value="secretary">Secrétaire</option>
+                          <option value="partner">Partenaire</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Mot de passe email *
+                        </label>
+                        <input
+                          type="password"
+                          value={accountConfig.password}
+                          onChange={(e) => setAccountConfig(prev => ({ ...prev, password: e.target.value }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Mot de passe du compte email"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Mot de passe fourni par l'administrateur serveur
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Signature */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <Edit3 className="w-5 h-5 mr-2" />
+                      Signature email
+                    </h3>
+                    
+                    <textarea
+                      value={accountConfig.signature}
+                      onChange={(e) => setAccountConfig(prev => ({ ...prev, signature: e.target.value }))}
+                      rows={6}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder={`Cordialement,
+Nom Prénom
+Sciences Labs
+Équipements Scientifiques Éducatifs
+Bamako, Mali
+Tél: +223 XX XX XX XX
+Email: ${accountConfig.email}`}
+                    />
+                  </div>
+                </div>
+          </div>
+                {/* Configuration serveur */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <Server className="w-5 h-5 mr-2" />
+                      Configuration serveur
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Serveur IMAP
+                          </label>
+                          <input
+                            type="text"
+                            value={accountConfig.imapServer}
+                            onChange={(e) => setAccountConfig(prev => ({ ...prev, imapServer: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Port IMAP
+                          </label>
+                          <input
+                            type="number"
+                            value={accountConfig.imapPort}
+                            onChange={(e) => setAccountConfig(prev => ({ ...prev, imapPort: parseInt(e.target.value) }))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Serveur SMTP
+                          </label>
+                          <input
+                            type="text"
+                            value={accountConfig.smtpServer}
+                            onChange={(e) => setAccountConfig(prev => ({ ...prev, smtpServer: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Port SMTP
+                          </label>
+                          <input
+                            type="number"
+                            value={accountConfig.smtpPort}
+                            onChange={(e) => setAccountConfig(prev => ({ ...prev, smtpPort: parseInt(e.target.value) }))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={accountConfig.ssl}
+                            onChange={(e) => setAccountConfig(prev => ({ ...prev, ssl: e.target.checked }))}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Utiliser SSL/TLS</span>
+                        </label>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Intervalle de synchronisation (minutes)
+                        </label>
+                        <select
+                          value={accountConfig.syncInterval}
+                          onChange={(e) => setAccountConfig(prev => ({ ...prev, syncInterval: parseInt(e.target.value) }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                          <option value={1}>1 minute</option>
+                          <option value={5}>5 minutes</option>
+                          <option value={10}>10 minutes</option>
+                          <option value={15}>15 minutes</option>
+                          <option value={30}>30 minutes</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+        </div>
+                  {/* Réponse automatique */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <Zap className="w-5 h-5 mr-2" />
+                      Réponse automatique
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={accountConfig.autoReplyEnabled}
+                            onChange={(e) => setAccountConfig(prev => ({ ...prev, autoReplyEnabled: e.target.checked }))}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Activer la réponse automatique</span>
+                        </label>
+                      </div>
+                      
+                      {accountConfig.autoReplyEnabled && (
+                        <>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Objet de la réponse automatique
+                            </label>
+                            <input
+                              type="text"
+                              value={accountConfig.autoReplySubject}
+                              onChange={(e) => setAccountConfig(prev => ({ ...prev, autoReplySubject: e.target.value }))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Message de réponse automatique
+                            </label>
+                            <textarea
+                              value={accountConfig.autoReplyMessage}
+                              onChange={(e) => setAccountConfig(prev => ({ ...prev, autoReplyMessage: e.target.value }))}
+                              rows={4}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+      )}
+                  {/* Test de connexion */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Test de connexion
+                    </h4>
+                    <button
+                      onClick={() => alert('Test de connexion simulé - Connexion réussie !')}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    >
+                      Tester la connexion
+                    </button>
+                    <p className="text-xs text-gray-600 mt-2">
+                      Vérifiez que les paramètres de connexion sont corrects
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-end space-x-4 p-6 border-t border-gray-200">
+              <button
+                onClick={() => {
+                  setShowAccountConfig(false);
+                  setEditingAccount(null);
+                }}
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleSaveAccountConfig}
+                className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {editingAccount ? 'Mettre à jour' : 'Ajouter le compte'}
+              </button>
             </div>
           </div>
         </div>
