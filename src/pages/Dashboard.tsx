@@ -23,7 +23,8 @@ import {
   ChevronDown,
   ChevronUp,
   BookOpen,
-  Mail
+  Mail,
+  Megaphone
 } from 'lucide-react';
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
