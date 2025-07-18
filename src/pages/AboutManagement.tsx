@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { 
   Info, Plus, Edit, Trash2, Save, X, Eye, Upload, 
-  Target, Heart, Lightbulb, Users, Settings, ArrowUp, ArrowDown
+  Target, Heart, Lightbulb, Users, Settings, ArrowUp, ArrowDown,
+  Truck, HeadphonesIcon, Award, BookOpen, Wrench, Shield, Globe
 } from 'lucide-react';
 
 interface AboutSection {
   id: string;
-  type: 'mission' | 'vision' | 'values' | 'service' | 'process';
+  type: 'mission' | 'vision' | 'values' | 'service' | 'additional_service' | 'process';
   title: string;
   description: string;
   icon?: string;
@@ -87,6 +88,138 @@ const AboutManagement = () => {
       ],
       order: 3,
       isActive: true
+    },
+    {
+      id: '4',
+      type: 'service',
+      title: 'Livraison Rapide',
+      description: 'Livraison dans toute l\'Afrique de l\'Ouest sous 7-14 jours ouvrables',
+      icon: '🚚',
+      features: [
+        'Livraison sécurisée et suivie',
+        'Emballage professionnel',
+        'Assurance transport incluse',
+        'Livraison gratuite dès 100 000 FCFA'
+      ],
+      order: 4,
+      isActive: true
+    },
+    {
+      id: '5',
+      type: 'service',
+      title: 'Support Technique',
+      description: 'Assistance technique et pédagogique par nos experts qualifiés',
+      icon: '🎧',
+      features: [
+        'Support technique 24/7',
+        'Formation à l\'utilisation',
+        'Maintenance préventive',
+        'Hotline dédiée'
+      ],
+      order: 5,
+      isActive: true
+    },
+    {
+      id: '6',
+      type: 'service',
+      title: 'Garantie Qualité',
+      description: 'Matériel certifié avec garantie complète sur tous nos produits',
+      icon: '🏆',
+      features: [
+        'Certification internationale',
+        'Garantie constructeur',
+        'Service après-vente',
+        'Échange gratuit en cas de défaut'
+      ],
+      order: 6,
+      isActive: true
+    },
+    {
+      id: '7',
+      type: 'service',
+      title: 'Formation Incluse',
+      description: 'Formation gratuite à l\'utilisation du matériel pour vos équipes',
+      icon: '👥',
+      features: [
+        'Formation sur site',
+        'Manuel d\'utilisation en français',
+        'Vidéos tutorielles',
+        'Certification utilisateur'
+      ],
+      order: 7,
+      isActive: true
+    },
+    {
+      id: '8',
+      type: 'additional_service',
+      title: 'Conseil Pédagogique',
+      description: 'Nos experts vous accompagnent dans la conception de vos programmes pédagogiques',
+      icon: '📚',
+      order: 8,
+      isActive: true
+    },
+    {
+      id: '9',
+      type: 'additional_service',
+      title: 'Installation et Maintenance',
+      description: 'Service d\'installation professionnel et maintenance préventive de vos équipements',
+      icon: '🔧',
+      order: 9,
+      isActive: true
+    },
+    {
+      id: '10',
+      type: 'additional_service',
+      title: 'Audit de Sécurité',
+      description: 'Évaluation complète de la sécurité de vos laboratoires et recommandations',
+      icon: '🛡️',
+      order: 10,
+      isActive: true
+    },
+    {
+      id: '11',
+      type: 'additional_service',
+      title: 'Réseau International',
+      description: 'Accès à un réseau mondial de fournisseurs pour des produits spécialisés',
+      icon: '🌍',
+      order: 11,
+      isActive: true
+    },
+    {
+      id: '12',
+      type: 'process',
+      title: 'Consultation',
+      description: 'Analyse approfondie de vos besoins spécifiques et de votre environnement pédagogique',
+      icon: '🔍',
+      order: 12,
+      isActive: true
+    },
+    {
+      id: '13',
+      type: 'process',
+      title: 'Devis',
+      description: 'Proposition personnalisée et détaillée avec recommandations d\'experts',
+      icon: '📋',
+      order: 13,
+      isActive: true
+    },
+    {
+      id: '14',
+      type: 'process',
+      title: 'Livraison',
+      description: 'Transport sécurisé, installation professionnelle et mise en service',
+      icon: '🚚',
+      order: 14,
+      isActive: true
+    },
+    {
+      id: '15',
+      type: 'process',
+      title: 'Formation',
+      description: 'Formation complète de vos équipes et support technique continu',
+      icon: '🎓',
+      order: 15,
+      isActive: true
     }
   ]);
 
@@ -96,6 +229,7 @@ const AboutManagement = () => {
     description: '',
     icon: '🎯',
     details: [''],
+    features: [''],
     isActive: true
   });
 
@@ -103,8 +237,9 @@ const AboutManagement = () => {
     { id: 'mission', name: 'Mission', icon: Target },
     { id: 'vision', name: 'Vision', icon: Eye },
     { id: 'values', name: 'Valeurs', icon: Heart },
-    { id: 'service', name: 'Service', icon: Users },
-    { id: 'process', name: 'Processus', icon: Settings }
+    { id: 'service', name: 'Service Principal', icon: Users },
+    { id: 'additional_service', name: 'Service Complémentaire', icon: Plus },
+    { id: 'process', name: 'Étape de Processus', icon: Settings }
   ];
 
   const handleCompanyInfoChange = (field: keyof CompanyInfo, value: string | number) => {
@@ -121,6 +256,7 @@ const AboutManagement = () => {
       description: newSection.description,
       icon: newSection.icon || '🎯',
       details: newSection.details?.filter(d => d.trim()) || [],
+      features: newSection.features?.filter(f => f.trim()) || [],
       order: sections.length + 1,
       isActive: true
     };
@@ -132,6 +268,7 @@ const AboutManagement = () => {
       description: '',
       icon: '🎯',
       details: [''],
+      features: [''],
       isActive: true
     });
     setShowAddSection(false);
@@ -149,6 +286,7 @@ const AboutManagement = () => {
       description: '',
       icon: '🎯',
       details: [''],
+      features: [''],
       isActive: true
     });
     alert('Section mise à jour avec succès !');
@@ -188,6 +326,7 @@ const AboutManagement = () => {
       description: section.description,
       icon: section.icon,
       details: section.details || [''],
+      features: section.features || [''],
       isActive: section.isActive
     });
     setEditingSection(section.id);
@@ -200,10 +339,24 @@ const AboutManagement = () => {
     }));
   };
 
+  const handleFeatureChange = (index: number, value: string) => {
+    setNewSection(prev => ({
+      ...prev,
+      features: prev.features?.map((feature, i) => i === index ? value : feature) || []
+    }));
+  };
+
   const addDetail = () => {
     setNewSection(prev => ({
       ...prev,
       details: [...(prev.details || []), '']
+    }));
+  };
+
+  const addFeature = () => {
+    setNewSection(prev => ({
+      ...prev,
+      features: [...(prev.features || []), '']
     }));
   };
 
@@ -214,9 +367,20 @@ const AboutManagement = () => {
     }));
   };
 
+  const removeFeature = (index: number) => {
+    setNewSection(prev => ({
+      ...prev,
+      features: prev.features?.filter((_, i) => i !== index) || []
+    }));
+  };
+
   const handleSaveAll = () => {
     // Simulation de sauvegarde
     alert('Toutes les modifications ont été sauvegardées avec succès !');
+  };
+
+  const getSectionsByType = (type: string) => {
+    return sections.filter(section => section.type === type).sort((a, b) => a.order - b.order);
   };
 
   const renderCompanyInfo = () => (
@@ -321,6 +485,80 @@ const AboutManagement = () => {
     </div>
   );
 
+  const renderSectionCard = (section: AboutSection) => (
+    <div key={section.id} className="bg-white rounded-lg shadow-lg p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <span className="text-2xl mr-3">{section.icon}</span>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
+            <p className="text-sm text-gray-600 capitalize">{section.type.replace('_', ' ')}</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => handleMoveSection(section.id, 'up')}
+            className="p-1 text-gray-500 hover:text-gray-700"
+            title="Monter"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => handleMoveSection(section.id, 'down')}
+            className="p-1 text-gray-500 hover:text-gray-700"
+            title="Descendre"
+          >
+            <ArrowDown className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => startEditSection(section)}
+            className="p-1 text-blue-600 hover:text-blue-800"
+            title="Modifier"
+          >
+            <Edit className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => handleDeleteSection(section.id)}
+            className="p-1 text-red-600 hover:text-red-800"
+            title="Supprimer"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+      
+      <p className="text-gray-700 mb-4">{section.description}</p>
+      
+      {section.details && section.details.length > 0 && (
+        <div className="mb-4">
+          <h4 className="font-medium text-gray-900 mb-2">Détails :</h4>
+          <ul className="space-y-1">
+            {section.details.map((detail, index) => (
+              <li key={index} className="flex items-start text-sm text-gray-600">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                {detail}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {section.features && section.features.length > 0 && (
+        <div>
+          <h4 className="font-medium text-gray-900 mb-2">Caractéristiques :</h4>
+          <ul className="space-y-1">
+            {section.features.map((feature, index) => (
+              <li key={index} className="flex items-start text-sm text-gray-600">
+                <div className="w-2 h-2 bg-green-600 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+
   const renderSections = () => (
     <div className="space-y-6">
       {/* Header */}
@@ -335,69 +573,50 @@ const AboutManagement = () => {
         </button>
       </div>
 
-      {/* Sections List */}
-      <div className="space-y-4">
-        {sections
-          .sort((a, b) => a.order - b.order)
-          .map((section) => (
-          <div key={section.id} className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <span className="text-2xl mr-3">{section.icon}</span>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
-                  <p className="text-sm text-gray-600 capitalize">{section.type}</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => handleMoveSection(section.id, 'up')}
-                  className="p-1 text-gray-500 hover:text-gray-700"
-                  title="Monter"
-                >
-                  <ArrowUp className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleMoveSection(section.id, 'down')}
-                  className="p-1 text-gray-500 hover:text-gray-700"
-                  title="Descendre"
-                >
-                  <ArrowDown className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => startEditSection(section)}
-                  className="p-1 text-blue-600 hover:text-blue-800"
-                  title="Modifier"
-                >
-                  <Edit className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleDeleteSection(section.id)}
-                  className="p-1 text-red-600 hover:text-red-800"
-                  title="Supprimer"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            
-            <p className="text-gray-700 mb-4">{section.description}</p>
-            
-            {section.details && section.details.length > 0 && (
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">Détails :</h4>
-                <ul className="space-y-1">
-                  {section.details.map((detail, index) => (
-                    <li key={index} className="flex items-start text-sm text-gray-600">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 mt-2 flex-shrink-0"></div>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
+      {/* Mission, Vision, Valeurs */}
+      <div className="bg-gray-50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <Target className="w-5 h-5 mr-2" />
+          Mission, Vision & Valeurs
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {getSectionsByType('mission').map(renderSectionCard)}
+          {getSectionsByType('vision').map(renderSectionCard)}
+          {getSectionsByType('values').map(renderSectionCard)}
+        </div>
+      </div>
+
+      {/* Nos Services */}
+      <div className="bg-gray-50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <Users className="w-5 h-5 mr-2" />
+          Nos Services
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {getSectionsByType('service').map(renderSectionCard)}
+        </div>
+      </div>
+
+      {/* Services Complémentaires */}
+      <div className="bg-gray-50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <Plus className="w-5 h-5 mr-2" />
+          Services Complémentaires
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {getSectionsByType('additional_service').map(renderSectionCard)}
+        </div>
+      </div>
+
+      {/* Notre Processus */}
+      <div className="bg-gray-50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <Settings className="w-5 h-5 mr-2" />
+          Notre Processus
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {getSectionsByType('process').map(renderSectionCard)}
+        </div>
       </div>
 
       {/* Add/Edit Section Modal */}
@@ -418,6 +637,7 @@ const AboutManagement = () => {
                     description: '',
                     icon: '🎯',
                     details: [''],
+                    features: [''],
                     isActive: true
                   });
                 }}
@@ -485,37 +705,75 @@ const AboutManagement = () => {
                   />
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Détails (optionnel)
-                  </label>
-                  <div className="space-y-2">
-                    {newSection.details?.map((detail, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <input
-                          type="text"
-                          value={detail}
-                          onChange={(e) => handleDetailChange(index, e.target.value)}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          placeholder="Détail..."
-                        />
-                        <button
-                          onClick={() => removeDetail(index)}
-                          className="p-2 text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      onClick={addDetail}
-                      className="text-blue-600 hover:text-blue-800 text-sm flex items-center"
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      Ajouter un détail
-                    </button>
+                {/* Détails (pour Mission, Vision, Valeurs) */}
+                {(newSection.type === 'mission' || newSection.type === 'vision' || newSection.type === 'values') && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Détails
+                    </label>
+                    <div className="space-y-2">
+                      {newSection.details?.map((detail, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <input
+                            type="text"
+                            value={detail}
+                            onChange={(e) => handleDetailChange(index, e.target.value)}
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Détail..."
+                          />
+                          <button
+                            onClick={() => removeDetail(index)}
+                            className="p-2 text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        onClick={addDetail}
+                        className="text-blue-600 hover:text-blue-800 text-sm flex items-center"
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Ajouter un détail
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Caractéristiques (pour Services) */}
+                {newSection.type === 'service' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Caractéristiques
+                    </label>
+                    <div className="space-y-2">
+                      {newSection.features?.map((feature, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <input
+                            type="text"
+                            value={feature}
+                            onChange={(e) => handleFeatureChange(index, e.target.value)}
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Caractéristique..."
+                          />
+                          <button
+                            onClick={() => removeFeature(index)}
+                            className="p-2 text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        onClick={addFeature}
+                        className="text-blue-600 hover:text-blue-800 text-sm flex items-center"
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Ajouter une caractéristique
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             
@@ -573,30 +831,91 @@ const AboutManagement = () => {
           </div>
         </div>
         
-        {/* Sections Preview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {sections
-            .filter(section => section.isActive)
-            .sort((a, b) => a.order - b.order)
-            .map((section) => (
-            <div key={section.id} className="border border-gray-200 rounded-lg p-6">
-              <div className="text-center mb-4">
-                <div className="text-4xl mb-2">{section.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900">{section.title}</h3>
+        {/* Mission, Vision, Valeurs Preview */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Mission, Vision & Valeurs</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {getSectionsByType('mission').concat(getSectionsByType('vision')).concat(getSectionsByType('values')).map((section) => (
+              <div key={section.id} className="border border-gray-200 rounded-lg p-6">
+                <div className="text-center mb-4">
+                  <div className="text-4xl mb-2">{section.icon}</div>
+                  <h3 className="text-xl font-bold text-gray-900">{section.title}</h3>
+                </div>
+                <p className="text-gray-600 mb-4">{section.description}</p>
+                {section.details && section.details.length > 0 && (
+                  <ul className="space-y-2">
+                    {section.details.map((detail, index) => (
+                      <li key={index} className="flex items-start text-sm text-gray-700">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                        {detail}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              <p className="text-gray-600 mb-4">{section.description}</p>
-              {section.details && section.details.length > 0 && (
-                <ul className="space-y-2">
-                  {section.details.map((detail, index) => (
-                    <li key={index} className="flex items-start text-sm text-gray-700">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full mr-2 mt-2 flex-shrink-0"></div>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* Nos Services Preview */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Nos Services</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {getSectionsByType('service').map((section) => (
+              <div key={section.id} className="border border-gray-200 rounded-lg p-6">
+                <div className="flex items-center mb-4">
+                  <div className="text-3xl mr-4">{section.icon}</div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">{section.title}</h3>
+                    <p className="text-gray-600">{section.description}</p>
+                  </div>
+                </div>
+                {section.features && section.features.length > 0 && (
+                  <ul className="space-y-2">
+                    {section.features.map((feature, index) => (
+                      <li key={index} className="flex items-start text-sm text-gray-700">
+                        <div className="w-2 h-2 bg-green-600 rounded-full mr-2 mt-2 flex-shrink-0"></div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Services Complémentaires Preview */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Services Complémentaires</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {getSectionsByType('additional_service').map((section) => (
+              <div key={section.id} className="border border-gray-200 rounded-lg p-6 text-center">
+                <div className="text-3xl mb-4">{section.icon}</div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{section.title}</h3>
+                <p className="text-gray-600 text-sm">{section.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Notre Processus Preview */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Notre Processus</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {getSectionsByType('process').map((section, index) => (
+              <div key={section.id} className="text-center">
+                <div className="relative mb-6">
+                  <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <span className="text-white font-bold text-lg">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                  <div className="text-4xl mb-2">{section.icon}</div>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{section.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{section.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -673,7 +992,7 @@ const AboutManagement = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -689,20 +1008,30 @@ const AboutManagement = () => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total sections</p>
-              <p className="text-2xl font-bold text-blue-600">{sections.length}</p>
+              <p className="text-sm font-medium text-gray-600">Services principaux</p>
+              <p className="text-2xl font-bold text-blue-600">{getSectionsByType('service').length}</p>
             </div>
-            <Target className="w-8 h-8 text-blue-600" />
+            <Users className="w-8 h-8 text-blue-600" />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Services complémentaires</p>
+              <p className="text-2xl font-bold text-purple-600">{getSectionsByType('additional_service').length}</p>
+            </div>
+            <Plus className="w-8 h-8 text-purple-600" />
           </div>
         </div>
         
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Dernière modification</p>
-              <p className="text-2xl font-bold text-purple-600">Aujourd'hui</p>
+              <p className="text-sm font-medium text-gray-600">Étapes processus</p>
+              <p className="text-2xl font-bold text-orange-600">{getSectionsByType('process').length}</p>
             </div>
-            <Edit className="w-8 h-8 text-purple-600" />
+            <Settings className="w-8 h-8 text-orange-600" />
           </div>
         </div>
       </div>
