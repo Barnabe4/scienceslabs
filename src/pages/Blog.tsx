@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Calendar, User, Clock, ArrowRight } from 'lucide-react';
+import { useBlog } from '../context/BlogContext';
 
 const Blog = () => {
+  const { getPublishedArticles, getArticlesByCategory } = useBlog();
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const categories = [
@@ -12,80 +14,14 @@ const Blog = () => {
     { id: 'news', name: 'Actualités' }
   ];
 
-  const articles = [
-    {
-      id: 1,
-      title: 'Les Nouvelles Tendances en Équipement de Laboratoire pour 2024',
-      category: 'technology',
-      author: 'Dr. Amadou Traoré',
-      date: '2024-01-15',
-      readTime: '5 min',
-      excerpt: 'Découvrez les innovations technologiques qui révolutionnent les laboratoires scolaires cette année.',
-      image: 'https://images.pexels.com/photos/2280568/pexels-photo-2280568.jpeg?auto=compress&cs=tinysrgb&w=600',
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'Guide Pratique : Organiser un Laboratoire de Chimie Sécurisé',
-      category: 'safety',
-      author: 'Mme Fatoumata Sidibé',
-      date: '2024-01-10',
-      readTime: '8 min',
-      excerpt: 'Les règles essentielles pour créer un environnement de travail sûr dans votre laboratoire de chimie.',
-      image: 'https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg?auto=compress&cs=tinysrgb&w=600',
-      featured: false
-    },
-    {
-      id: 3,
-      title: 'L\'Impact de l\'Expérimentation Pratique sur l\'Apprentissage des Sciences',
-      category: 'education',
-      author: 'Prof. Ibrahim Koné',
-      date: '2024-01-05',
-      readTime: '6 min',
-      excerpt: 'Comment les expériences pratiques améliorent-elles la compréhension des concepts scientifiques ?',
-      image: 'https://images.pexels.com/photos/8197543/pexels-photo-8197543.jpeg?auto=compress&cs=tinysrgb&w=600',
-      featured: false
-    },
-    {
-      id: 4,
-      title: 'Sciences Labs Partenaire de l\'Université de Bamako',
-      category: 'news',
-      author: 'Équipe Sciences Labs',
-      date: '2024-01-02',
-      readTime: '3 min',
-      excerpt: 'Nouveau partenariat stratégique pour équiper les laboratoires de recherche de l\'université.',
-      image: 'https://images.pexels.com/photos/2280571/pexels-photo-2280571.jpeg?auto=compress&cs=tinysrgb&w=600',
-      featured: false
-    },
-    {
-      id: 5,
-      title: 'Les Défis de l\'Enseignement Scientifique en Afrique de l\'Ouest',
-      category: 'education',
-      author: 'Dr. Aminata Diallo',
-      date: '2023-12-28',
-      readTime: '7 min',
-      excerpt: 'Analyse des enjeux et solutions pour améliorer l\'enseignement des sciences dans la région.',
-      image: 'https://images.pexels.com/photos/3735747/pexels-photo-3735747.jpeg?auto=compress&cs=tinysrgb&w=600',
-      featured: false
-    },
-    {
-      id: 6,
-      title: 'Comment Choisir le Bon Microscope pour Votre École',
-      category: 'technology',
-      author: 'M. Seydou Keita',
-      date: '2023-12-20',
-      readTime: '10 min',
-      excerpt: 'Guide complet pour sélectionner l\'équipement de microscopie adapté à vos besoins pédagogiques.',
-      image: 'https://images.pexels.com/photos/256262/pexels-photo-256262.jpeg?auto=compress&cs=tinysrgb&w=600',
-      featured: false
-    }
-  ];
+  // Utiliser les articles du contexte (publiés uniquement)
+  const allArticles = getPublishedArticles();
 
-  const filteredArticles = articles.filter(article => 
+  const filteredArticles = allArticles.filter(article => 
     selectedCategory === 'all' || article.category === selectedCategory
   );
 
-  const featuredArticle = articles.find(article => article.featured);
+  const featuredArticle = allArticles.find(article => article.featured);
   const otherArticles = filteredArticles.filter(article => !article.featured);
 
   const getCategoryColor = (category: string) => {
@@ -159,11 +95,11 @@ const Blog = () => {
                     </div>
                     <div className="flex items-center mr-6">
                       <Calendar className="w-4 h-4 mr-2" />
-                      {new Date(featuredArticle.date).toLocaleDateString('fr-FR')}
+                      {new Date(article.publishDate).toLocaleDateString('fr-FR')}
                     </div>
                     <div className="flex items-center">
                       <Clock className="w-4 h-4 mr-2" />
-                      {featuredArticle.readTime}
+                      {article.readTime} min
                     </div>
                   </div>
                   <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center">
