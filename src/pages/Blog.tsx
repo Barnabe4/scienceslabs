@@ -143,11 +143,11 @@ const Blog = () => {
                   </div>
                   <div className="flex items-center mr-4">
                     <Calendar className="w-3 h-3 mr-1" />
-                    {new Date(article.date).toLocaleDateString('fr-FR')}
+                    {new Date(article.publishDate).toLocaleDateString('fr-FR')}
                   </div>
                   <div className="flex items-center">
                     <Clock className="w-3 h-3 mr-1" />
-                    {article.readTime}
+                    {featuredArticle.readTime} min
                   </div>
                 </div>
                 <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center">
