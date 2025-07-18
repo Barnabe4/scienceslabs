@@ -22,6 +22,7 @@ import { OrderProvider } from './context/OrderContext';
 import { SettingsProvider } from './context/SettingsContext';
 import { QuoteProvider } from './context/QuoteContext';
 import { AboutProvider } from './context/AboutContext';
+import { TrainingProvider } from './context/TrainingContext';
 import OrderManagement from './pages/OrderManagement';
 import UserManagement from './pages/UserManagement';
 import AddUser from './pages/AddUser';
@@ -45,10 +46,12 @@ import FinancialReports from './pages/FinancialReports';
 import FinancialSettings from './pages/FinancialSettings';
 import ReportsManagement from './pages/ReportsManagement';
 import AboutManagement from './pages/AboutManagement';
+import TrainingManagement from './pages/TrainingManagement';
 
 function App() {
   return (
     <AuthProvider>
+      <TrainingProvider>
       <AboutProvider>
         <SettingsProvider>
           <CategoryProvider>
@@ -100,6 +103,7 @@ function App() {
                               <Route path="/finance/parametres" element={<FinancialSettings />} />
                               <Route path="/admin/rapports" element={<ReportsManagement />} />
                               <Route path="/admin/a-propos" element={<AboutManagement />} />
+                              <Route path="/admin/formations" element={<TrainingManagement />} />
                             </Routes>
                           </main>
                           <Footer />
@@ -113,6 +117,7 @@ function App() {
           </CategoryProvider>
         </SettingsProvider>
       </AboutProvider>
+      </TrainingProvider>
     </AuthProvider>
   );
 }

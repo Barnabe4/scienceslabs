@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useTraining } from '../context/TrainingContext';
 import { useCart } from '../context/CartContext';
 import { Calendar, Clock, Users, MapPin, BookOpen, Award, ChevronRight } from 'lucide-react';
 
 const Training = () => {
+  const { trainings: contextTrainings, getActiveTrainings } = useTraining();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const { addToCart } = useCart();
 
@@ -25,68 +27,8 @@ const Training = () => {
     { id: 'equipment', name: 'Utilisation d\'équipements' }
   ];
 
-  const trainings = [
-    {
-      id: 1,
-      title: 'Formation Sécurité en Laboratoire de Chimie',
-      category: 'safety',
-      duration: '2 jours',
-      participants: '15 max',
-      price: 85000,
-      level: 'Débutant',
-      description: 'Formation complète sur les règles de sécurité essentielles en laboratoire de chimie',
-      topics: ['EPI et leur utilisation', 'Manipulation des produits chimiques', 'Gestion des déchets', 'Procédures d\'urgence'],
-      nextDate: '2024-02-15',
-      location: 'Bamako',
-      certified: true,
-      image: 'https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: 2,
-      title: 'Utilisation Avancée du Microscope',
-      category: 'biology',
-      duration: '3 jours',
-      participants: '12 max',
-      price: 95000,
-      level: 'Intermédiaire',
-      description: 'Maîtrisez toutes les techniques d\'observation microscopique pour vos cours de SVT',
-      topics: ['Réglages optiques avancés', 'Préparation d\'échantillons', 'Techniques de coloration', 'Photomicrographie'],
-      nextDate: '2024-02-22',
-      location: 'Ouagadougou',
-      certified: true,
-      image: 'https://images.pexels.com/photos/3735747/pexels-photo-3735747.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: 3,
-      title: 'Expériences de Physique Innovantes',
-      category: 'physics',
-      duration: '4 jours',
-      participants: '20 max',
-      price: 120000,
-      level: 'Avancé',
-      description: 'Découvrez des expériences de physique captivantes pour enrichir vos cours',
-      topics: ['Mécanique appliquée', 'Électricité et magnétisme', 'Optique moderne', 'Thermodynamique'],
-      nextDate: '2024-03-05',
-      location: 'Abidjan',
-      certified: true,
-      image: 'https://images.pexels.com/photos/8847434/pexels-photo-8847434.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: 4,
-      title: 'Initiation à la Chimie Analytique',
-      category: 'chemistry',
-      duration: '3 jours',
-      participants: '15 max',
-      price: 98000,
-      level: 'Débutant',
-      description: 'Les bases de la chimie analytique pour l\'enseignement secondaire',
-      topics: ['Titrages acide-base', 'Spectrophotométrie', 'Chromatographie simple', 'Analyse qualitative'],
-      nextDate: '2024-03-12',
-      location: 'Bamako',
-      certified: true,
-      image: 'https://images.pexels.com/photos/256262/pexels-photo-256262.jpeg?auto=compress&cs=tinysrgb&w=400'
-    }
-  ];
+  // Utiliser les formations du contexte (actives uniquement pour la page publique)
+  const trainings = getActiveTrainings();
 
   const filteredTrainings = trainings.filter(training => 
     selectedCategory === 'all' || training.category === selectedCategory
