@@ -105,6 +105,7 @@ function App() {
                               <Route path="/admin/rapports" element={<ReportsManagement />} />
                               <Route path="/admin/a-propos" element={<AboutManagement />} />
                               <Route path="/admin/formations" element={<TrainingManagement />} />
+                              <Route path="/admin/blog" element={<BlogManagement />} />
                             </Routes>
                           </main>
                           <Footer />
@@ -118,6 +119,7 @@ function App() {
           </CategoryProvider>
         </SettingsProvider>
       </AboutProvider>
+      </BlogProvider>
       </TrainingProvider>
     </AuthProvider>
   );
