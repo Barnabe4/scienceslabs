@@ -49,6 +49,7 @@ import ReportsManagement from './pages/ReportsManagement';
 import AboutManagement from './pages/AboutManagement';
 import TrainingManagement from './pages/TrainingManagement';
 import BlogManagement from './pages/BlogManagement';
+import BlogManagement from './pages/BlogManagement';
 
 function App() {
   return (
@@ -107,6 +108,7 @@ function App() {
                               <Route path="/admin/rapports" element={<ReportsManagement />} />
                               <Route path="/admin/a-propos" element={<AboutManagement />} />
                               <Route path="/admin/formations" element={<TrainingManagement />} />
+                              <Route path="/admin/blog" element={<BlogManagement />} />
                               <Route path="/admin/blog" element={<BlogManagement />} />
                             </Routes>
                           </main>

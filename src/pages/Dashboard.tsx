@@ -36,6 +36,7 @@ import InvoiceManagement from './InvoiceManagement';
 import ReportsManagement from './ReportsManagement';
 import AboutManagement from './AboutManagement';
 import TrainingManagement from './TrainingManagement';
+import BlogManagement from './BlogManagement';
 
 interface MenuItem {
   id: string;
@@ -70,6 +71,7 @@ const Dashboard: React.FC = () => {
     { id: 'invoices', name: 'Facturation', icon: FileText },
     { id: 'reports', name: 'Rapports', icon: BarChart3 },
     { id: 'trainings', name: 'Formations', icon: BookOpen },
+    { id: 'blog', name: 'Blog', icon: FileText },
     { id: 'about', name: 'À propos', icon: Users },
     { 
       id: 'finance', 
@@ -303,6 +305,13 @@ const Dashboard: React.FC = () => {
         return (
           <div className="space-y-6">
             <TrainingManagement />
+          </div>
+        );
+      
+      case 'blog':
+        return (
+          <div className="space-y-6">
+            <BlogManagement />
           </div>
         );
       
