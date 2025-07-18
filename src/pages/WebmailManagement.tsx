@@ -13,6 +13,7 @@ const WebmailManagement = () => {
     selectedEmails,
     currentFolder,
     searchQuery,
+    addAccount,
     sendEmail,
     replyToEmail,
     forwardEmail,
