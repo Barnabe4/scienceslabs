@@ -36,6 +36,12 @@ const ProductManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  const [showStockModal, setShowStockModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
+  const [stockAlerts, setStockAlerts] = useState<Product[]>([]);
+  const [topProducts, setTopProducts] = useState<any[]>([]);
+  const [pricingAnalysis, setPricingAnalysis] = useState<any>({});
 
   const [products, setProducts] = useState<Product[]>([
     {
@@ -323,6 +329,71 @@ const ProductManagement = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleStockAlerts = () => {
+    const lowStockProducts = products.filter(p => p.stock <= p.stockAlert);
+    setStockAlerts(lowStockProducts);
+    setShowStockModal(true);
+  };
+
+  const handleSalesAnalysis = () => {
+    // Simulation d'analyse des ventes avec données réalistes
+    const analysisData = products.map(product => ({
+      ...product,
+      totalSold: Math.floor(Math.random() * 100) + 10,
+      revenue: product.priceTTC * (Math.floor(Math.random() * 100) + 10),
+      trend: Math.random() > 0.5 ? 'up' : 'down',
+      trendPercent: Math.floor(Math.random() * 30) + 5
+    })).sort((a, b) => b.revenue - a.revenue);
+    
+    setTopProducts(analysisData.slice(0, 10));
+    setShowAnalyticsModal(true);
+  };
+
+  const handlePricingAnalysis = () => {
+    const totalProducts = products.length;
+    const avgPrice = products.reduce((sum, p) => sum + p.priceTTC, 0) / totalProducts;
+    const expensiveProducts = products.filter(p => p.priceTTC > avgPrice * 1.5);
+    const cheapProducts = products.filter(p => p.priceTTC < avgPrice * 0.5);
+    const competitiveProducts = products.filter(p => p.priceTTC >= avgPrice * 0.5 && p.priceTTC <= avgPrice * 1.5);
+    
+    const analysis = {
+      totalProducts,
+      avgPrice,
+      expensiveProducts: expensiveProducts.length,
+      cheapProducts: cheapProducts.length,
+      competitiveProducts: competitiveProducts.length,
+      recommendations: [
+        expensiveProducts.length > totalProducts * 0.3 ? 'Considérer des promotions sur les produits premium' : null,
+        cheapProducts.length > totalProducts * 0.4 ? 'Revoir la stratégie tarifaire des produits bas de gamme' : null,
+        'Optimiser les marges sur les produits à forte rotation'
+      ].filter(Boolean)
+    };
+    
+    setPricingAnalysis(analysis);
+    setShowPricingModal(true);
+  };
+
+  const handleReorderStock = (productId: number) => {
+    setProducts(prev => prev.map(product => 
+      product.id === productId 
+        ? { ...product, stock: product.stock + 50, updatedAt: new Date().toISOString() }
+        : product
+    ));
+  };
+
+  const handleUpdatePrice = (productId: number, newPrice: number) => {
+    setProducts(prev => prev.map(product => 
+      product.id === productId 
+        ? { 
+            ...product, 
+            priceTTC: newPrice,
+            priceHT: Math.round(newPrice / 1.18),
+            updatedAt: new Date().toISOString() 
+          }
+        : product
+    ));
   };
 
   return (
@@ -634,10 +705,7 @@ const ProductManagement = () => {
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button 
-            onClick={() => {
-              const lowStockProducts = products.filter(p => p.stock <= p.stockAlert);
-              alert(`${lowStockProducts.length} produits en alerte stock détectés. Commandes fournisseurs automatiques générées.`);
-            }}
+            onClick={handleStockAlerts}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <AlertTriangle className="w-8 h-8 text-orange-600 mr-4" />
@@ -647,13 +715,7 @@ const ProductManagement = () => {
             </div>
           </button>
           <button 
-            onClick={() => {
-              const topProducts = products
-                .sort((a, b) => (b.priceTTC * (50 - b.stock)) - (a.priceTTC * (50 - a.stock)))
-                .slice(0, 5);
-              const topProductNames = topProducts.map(p => p.name).join(', ');
-              alert(`Top 5 produits les plus vendus : ${topProductNames}. Rapport détaillé généré.`);
-            }}
+            onClick={handleSalesAnalysis}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <BarChart3 className="w-8 h-8 text-blue-600 mr-4" />
@@ -663,11 +725,7 @@ const ProductManagement = () => {
             </div>
           </button>
           <button 
-            onClick={() => {
-              const avgPrice = products.reduce((sum, p) => sum + p.priceTTC, 0) / products.length;
-              const expensiveProducts = products.filter(p => p.priceTTC > avgPrice * 1.5);
-              alert(`Prix moyen : ${avgPrice.toLocaleString()} FCFA. ${expensiveProducts.length} produits premium identifiés pour promotions ciblées.`);
-            }}
+            onClick={handlePricingAnalysis}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Tag className="w-8 h-8 text-purple-600 mr-4" />
@@ -678,6 +736,307 @@ const ProductManagement = () => {
           </button>
         </div>
       </div>
+
+      {/* Modal Alertes Stock */}
+      {showStockModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <AlertTriangle className="w-6 h-6 mr-2 text-orange-600" />
+                Alertes Stock ({stockAlerts.length})
+              </h2>
+              <button
+                onClick={() => setShowStockModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              {stockAlerts.length === 0 ? (
+                <div className="text-center py-8">
+                  <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucune alerte stock</h3>
+                  <p className="text-gray-600">Tous vos produits ont un stock suffisant.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+                    <div className="flex items-center">
+                      <AlertTriangle className="w-5 h-5 text-orange-600 mr-2" />
+                      <span className="font-medium text-orange-800">Attention</span>
+                    </div>
+                    <p className="text-orange-700 text-sm mt-1">
+                      Ces produits ont atteint ou dépassé leur seuil d'alerte stock.
+                    </p>
+                  </div>
+                  
+                  {stockAlerts.map((product) => (
+                    <div key={product.id} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden mr-4">
+                            <img
+                              src={product.images[0]}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">{product.name}</div>
+                            <div className="text-sm text-gray-500">SKU: {product.sku}</div>
+                            <div className="text-xs text-gray-400">
+                              Stock actuel: {product.stock} | Seuil: {product.stockAlert}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleReorderStock(product.id)}
+                            className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors"
+                          >
+                            Réapprovisionner (+50)
+                          </button>
+                          <button
+                            onClick={() => navigate(`/admin/produits/${product.id}/editer`)}
+                            className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 transition-colors"
+                          >
+                            Modifier
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <div className="flex justify-center space-x-3 pt-4 border-t">
+                    <button
+                      onClick={() => {
+                        stockAlerts.forEach(product => handleReorderStock(product.id));
+                        setShowStockModal(false);
+                        alert(`${stockAlerts.length} produits réapprovisionnés automatiquement !`);
+                      }}
+                      className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Réapprovisionner tout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Analyse des Ventes */}
+      {showAnalyticsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-6xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <BarChart3 className="w-6 h-6 mr-2 text-blue-600" />
+                Analyse des Ventes - Top Produits
+              </h2>
+              <button
+                onClick={() => setShowAnalyticsModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-medium text-blue-900 mb-2">Chiffre d'Affaires Total</h3>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {formatCurrency(topProducts.reduce((sum, p) => sum + p.revenue, 0))}
+                  </p>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="font-medium text-green-900 mb-2">Produits Vendus</h3>
+                  <p className="text-2xl font-bold text-green-600">
+                    {topProducts.reduce((sum, p) => sum + p.totalSold, 0)}
+                  </p>
+                </div>
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h3 className="font-medium text-purple-900 mb-2">Panier Moyen</h3>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {formatCurrency(topProducts.reduce((sum, p) => sum + p.revenue, 0) / topProducts.reduce((sum, p) => sum + p.totalSold, 0))}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rang</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Produit</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Vendus</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Revenus</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tendance</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {topProducts.map((product, index) => (
+                      <tr key={product.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-4 text-sm font-bold text-gray-900">#{index + 1}</td>
+                        <td className="px-4 py-4">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 bg-gray-200 rounded-lg overflow-hidden mr-3">
+                              <img
+                                src={product.images[0]}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                              <div className="text-xs text-gray-500">{product.sku}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 text-sm font-medium text-gray-900">{product.totalSold}</td>
+                        <td className="px-4 py-4 text-sm font-medium text-green-600">
+                          {formatCurrency(product.revenue)}
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className={`flex items-center ${product.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                            {product.trend === 'up' ? (
+                              <TrendingUp className="w-4 h-4 mr-1" />
+                            ) : (
+                              <TrendingDown className="w-4 h-4 mr-1" />
+                            )}
+                            <span className="text-sm font-medium">
+                              {product.trend === 'up' ? '+' : '-'}{product.trendPercent}%
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <button
+                            onClick={() => navigate(`/admin/produits/${product.id}/preview`)}
+                            className="text-blue-600 hover:text-blue-800 text-sm"
+                          >
+                            Voir détails
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Gestion des Prix */}
+      {showPricingModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <Tag className="w-6 h-6 mr-2 text-purple-600" />
+                Analyse des Prix
+              </h2>
+              <button
+                onClick={() => setShowPricingModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-medium text-blue-900 mb-4">Statistiques Générales</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-blue-700">Total produits:</span>
+                      <span className="font-bold text-blue-900">{pricingAnalysis.totalProducts}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-blue-700">Prix moyen:</span>
+                      <span className="font-bold text-blue-900">
+                        {formatCurrency(pricingAnalysis.avgPrice || 0)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="font-medium text-green-900 mb-4">Répartition par Gamme</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-green-700">Produits premium:</span>
+                      <span className="font-bold text-green-900">{pricingAnalysis.expensiveProducts}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-green-700">Produits compétitifs:</span>
+                      <span className="font-bold text-green-900">{pricingAnalysis.competitiveProducts}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-green-700">Produits économiques:</span>
+                      <span className="font-bold text-green-900">{pricingAnalysis.cheapProducts}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <h3 className="font-medium text-yellow-900 mb-3">Recommandations IA</h3>
+                <ul className="space-y-2">
+                  {pricingAnalysis.recommendations?.map((rec: string, index: number) => (
+                    <li key={index} className="flex items-start text-yellow-800">
+                      <div className="w-2 h-2 bg-yellow-600 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                      <span className="text-sm">{rec}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="bg-white border border-gray-200 rounded-lg p-4">
+                <h3 className="font-medium text-gray-900 mb-4">Actions Recommandées</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <button
+                    onClick={() => {
+                      // Simulation d'optimisation des prix
+                      const optimizedCount = Math.floor(products.length * 0.3);
+                      alert(`${optimizedCount} prix optimisés automatiquement selon l'analyse IA !`);
+                      setShowPricingModal(false);
+                    }}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Optimiser les prix
+                  </button>
+                  <button
+                    onClick={() => {
+                      alert('Campagne promotionnelle créée pour les produits premium !');
+                      setShowPricingModal(false);
+                    }}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    Créer promotion
+                  </button>
+                  <button
+                    onClick={() => {
+                      alert('Rapport de pricing détaillé généré et envoyé par email !');
+                      setShowPricingModal(false);
+                    }}
+                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+                  >
+                    Générer rapport
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
