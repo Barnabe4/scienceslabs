@@ -43,6 +43,20 @@ const ClientManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedClients, setSelectedClients] = useState<number[]>([]);
+  const [showDiscountModal, setShowDiscountModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showInactiveModal, setShowInactiveModal] = useState(false);
+  const [discountSettings, setDiscountSettings] = useState({
+    vipThreshold: 1000000,
+    vipDiscount: 15,
+    loyaltyThreshold: 500000,
+    loyaltyDiscount: 10
+  });
+  const [paymentSettings, setPaymentSettings] = useState({
+    standardDelay: 30,
+    extendedDelay: 45,
+    maxDelay: 60
+  });
 
   const [clients, setClients] = useState<Client[]>([
     {
@@ -579,8 +593,7 @@ const ClientManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button 
             onClick={() => {
-              const highValueClients = clients.filter(c => c.totalSpent > 1000000);
-              alert(`${highValueClients.length} clients VIP identifiés. Remises spéciales appliquées automatiquement.`);
+              handleManageDiscounts();
             }}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
@@ -592,8 +605,7 @@ const ClientManagement = () => {
           </button>
           <button 
             onClick={() => {
-              const overdueClients = clients.filter(c => c.specialConditions.paymentDelay > 30);
-              alert(`${overdueClients.length} clients avec paiements différés détectés. Relances automatiques programmées.`);
+              handlePaymentDelays();
             }}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
@@ -605,12 +617,7 @@ const ClientManagement = () => {
           </button>
           <button 
             onClick={() => {
-              const inactiveClients = clients.filter(c => c.status === 'inactive');
-              if (inactiveClients.length > 0) {
-                alert(`${inactiveClients.length} clients inactifs détectés. Campagne de réactivation lancée avec offres spéciales.`);
-              } else {
-                alert('Tous vos clients sont actifs ! Excellent travail.');
-              }
+              handleInactiveClients();
             }}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
