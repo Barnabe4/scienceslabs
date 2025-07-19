@@ -4,7 +4,7 @@ import {
   Users, Plus, Search, Filter, Edit, Trash2, Eye, School, 
   User, Building, Calendar, ShoppingCart, DollarSign, 
   ChevronDown, MoreHorizontal, Download, Upload, Phone,
-  Mail, MapPin, Percent, Clock, Star, AlertCircle
+  Mail, MapPin, Percent, Clock, Star, AlertCircle, X, CheckCircle
 } from 'lucide-react';
 
 interface Client {
@@ -244,102 +244,6 @@ const ClientManagement = () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
       setClients(prev => prev.filter(client => client.id !== clientId));
     }
-  };
-
-  // Fonctions pour les actions rapides
-  const handleManageDiscounts = () => {
-    setShowDiscountModal(true);
-  };
-
-  const handlePaymentDelays = () => {
-    setShowPaymentModal(true);
-  };
-
-  const handleInactiveClients = () => {
-    setShowInactiveModal(true);
-  };
-
-  const applyDiscountSettings = () => {
-    const updatedClients = clients.map(client => {
-      let newDiscount = client.specialConditions.discount;
-      
-      if (client.totalSpent >= discountSettings.vipThreshold) {
-        newDiscount = Math.max(newDiscount, discountSettings.vipDiscount);
-      } else if (client.totalSpent >= discountSettings.loyaltyThreshold) {
-        newDiscount = Math.max(newDiscount, discountSettings.loyaltyDiscount);
-      }
-      
-      return {
-        ...client,
-        specialConditions: {
-          ...client.specialConditions,
-          discount: newDiscount
-        }
-      };
-    });
-    
-    setClients(updatedClients);
-    setShowDiscountModal(false);
-    
-    const vipClients = clients.filter(c => c.totalSpent >= discountSettings.vipThreshold);
-    const loyaltyClients = clients.filter(c => c.totalSpent >= discountSettings.loyaltyThreshold && c.totalSpent < discountSettings.vipThreshold);
-    
-    alert(`Remises appliquées avec succès !\n- ${vipClients.length} clients VIP (${discountSettings.vipDiscount}%)\n- ${loyaltyClients.length} clients fidèles (${discountSettings.loyaltyDiscount}%)`);
-  };
-
-  const applyPaymentSettings = () => {
-    const updatedClients = clients.map(client => {
-      let newDelay = paymentSettings.standardDelay;
-      
-      // Clients VIP : délai étendu
-      if (client.totalSpent >= 1000000) {
-        newDelay = paymentSettings.extendedDelay;
-      }
-      // Clients avec historique de retard : délai réduit
-      else if (client.rating < 4) {
-        newDelay = Math.min(paymentSettings.standardDelay, 15);
-      }
-      
-      return {
-        ...client,
-        specialConditions: {
-          ...client.specialConditions,
-          paymentDelay: Math.min(newDelay, paymentSettings.maxDelay)
-        }
-      };
-    });
-    
-    setClients(updatedClients);
-    setShowPaymentModal(false);
-    
-    const extendedClients = updatedClients.filter(c => c.specialConditions.paymentDelay > paymentSettings.standardDelay);
-    alert(`Délais de paiement mis à jour !\n- ${extendedClients.length} clients avec délai étendu\n- Délai standard : ${paymentSettings.standardDelay} jours`);
-  };
-
-  const reactivateInactiveClients = () => {
-    const inactiveClients = clients.filter(c => c.status === 'inactive');
-    
-    if (inactiveClients.length === 0) {
-      alert('Aucun client inactif trouvé. Tous vos clients sont actifs !');
-      setShowInactiveModal(false);
-      return;
-    }
-    
-    // Simuler l'envoi d'emails de réactivation
-    const updatedClients = clients.map(client => {
-      if (client.status === 'inactive') {
-        return {
-          ...client,
-          notes: client.notes + ' | Email de réactivation envoyé le ' + new Date().toLocaleDateString('fr-FR')
-        };
-      }
-      return client;
-    });
-    
-    setClients(updatedClients);
-    setShowInactiveModal(false);
-    
-    alert(`Campagne de réactivation lancée !\n- ${inactiveClients.length} clients contactés\n- Emails personnalisés envoyés\n- Offre spéciale 15% incluse`);
   };
 
   const getTypeIcon = (type: string) => {
