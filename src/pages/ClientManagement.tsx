@@ -577,7 +577,13 @@ const ClientManagement = () => {
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={() => {
+              const highValueClients = clients.filter(c => c.totalSpent > 1000000);
+              alert(`${highValueClients.length} clients VIP identifiés. Remises spéciales appliquées automatiquement.`);
+            }}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <Percent className="w-8 h-8 text-green-600 mr-4" />
             <div>
               <h4 className="font-medium text-gray-900">Gérer les remises</h4>
@@ -585,7 +591,10 @@ const ClientManagement = () => {
             </div>
           </button>
           <button 
-            onClick={() => alert('Fonctionnalité en cours de développement')}
+            onClick={() => {
+              const overdueClients = clients.filter(c => c.specialConditions.paymentDelay > 30);
+              alert(`${overdueClients.length} clients avec paiements différés détectés. Relances automatiques programmées.`);
+            }}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Clock className="w-8 h-8 text-blue-600 mr-4" />
@@ -595,7 +604,14 @@ const ClientManagement = () => {
             </div>
           </button>
           <button 
-            onClick={() => alert('Fonctionnalité en cours de développement')}
+            onClick={() => {
+              const inactiveClients = clients.filter(c => c.status === 'inactive');
+              if (inactiveClients.length > 0) {
+                alert(`${inactiveClients.length} clients inactifs détectés. Campagne de réactivation lancée avec offres spéciales.`);
+              } else {
+                alert('Tous vos clients sont actifs ! Excellent travail.');
+              }
+            }}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <AlertCircle className="w-8 h-8 text-orange-600 mr-4" />

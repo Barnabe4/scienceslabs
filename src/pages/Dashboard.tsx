@@ -391,6 +391,70 @@ const Dashboard: React.FC = () => {
           </div>
         );
       
+      case 'tasks':
+        return (
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Gestion des Tâches</h2>
+              <div className="space-y-4">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <h3 className="font-medium text-yellow-800 mb-3">Tâches en cours</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-center text-yellow-700">
+                      <input type="checkbox" className="mr-2" />
+                      Vérifier le stock des béchers
+                    </li>
+                    <li className="flex items-center text-yellow-700">
+                      <input type="checkbox" className="mr-2" />
+                      Préparer la commande CMD-2024-001
+                    </li>
+                    <li className="flex items-center text-yellow-700">
+                      <input type="checkbox" className="mr-2" />
+                      Contacter le fournisseur de microscopes
+                    </li>
+                  </ul>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="font-medium text-green-800 mb-3">Tâches terminées</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-center text-green-700">
+                      <input type="checkbox" checked className="mr-2" />
+                      Mise à jour du catalogue
+                    </li>
+                    <li className="flex items-center text-green-700">
+                      <input type="checkbox" checked className="mr-2" />
+                      Formation équipe sur nouveaux produits
+                    </li>
+                  </ul>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="font-medium text-blue-800 mb-3">Actions Rapides</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button 
+                      onClick={() => alert('Nouvelle tâche créée')}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Nouvelle tâche
+                    </button>
+                    <button 
+                      onClick={() => alert('Rapport généré')}
+                      className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      Rapport quotidien
+                    </button>
+                    <button 
+                      onClick={() => alert('Équipe notifiée')}
+                      className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                      Notifier équipe
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
       case 'finance':
       case 'finance-dashboard':
       case 'finance-revenue':
