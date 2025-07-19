@@ -80,7 +80,7 @@ const QuoteRequestModal: React.FC<QuoteRequestModalProps> = ({ isOpen, onClose }
     const textColor = [55, 65, 81]; // Gris foncé
     
     // En-tête avec logo et informations entreprise
-    doc.setFillColor(...primaryColor);
+    doc.setFillColor(...(primaryColor as [number, number, number]));
     doc.rect(0, 0, 210, 40, 'F');
     
     // Logo (simulé avec du texte)
@@ -100,13 +100,13 @@ const QuoteRequestModal: React.FC<QuoteRequestModalProps> = ({ isOpen, onClose }
     doc.text('Bamako, Mali | +223 XX XX XX XX | contact@scienceslabs.com', 35, 35);
     
     // Titre DEVIS
-    doc.setTextColor(...secondaryColor);
+    doc.setTextColor(...(secondaryColor as [number, number, number]));
     doc.setFontSize(28);
     doc.setFont('helvetica', 'bold');
     doc.text('DEVIS', 150, 25);
     
     // Numéro et date
-    doc.setTextColor(...textColor);
+    doc.setTextColor(...(textColor as [number, number, number]));
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text(`N° ${quoteNumber}`, 150, 32);
@@ -173,7 +173,7 @@ const QuoteRequestModal: React.FC<QuoteRequestModalProps> = ({ isOpen, onClose }
     
     // Totaux
     yPos += 15;
-    doc.setDrawColor(...primaryColor);
+    doc.setDrawColor(...(primaryColor as [number, number, number]));
     doc.line(120, yPos, 190, yPos);
     
     yPos += 8;
