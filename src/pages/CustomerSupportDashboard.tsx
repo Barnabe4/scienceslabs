@@ -354,7 +354,7 @@ const CustomerSupportDashboard = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Temps de réponse:</span>
-              <span className="font-bold text-orange-600">< 2 sec</span>
+              <span className="font-bold text-orange-600">&lt; 2 sec</span>
             </div>
           </div>
         </div>
