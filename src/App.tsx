@@ -52,7 +52,11 @@ import BlogManagement from './pages/BlogManagement';
 import WebmailManagement from './pages/WebmailManagement';
 import { WebmailProvider } from './context/WebmailContext';
 import { MarketingProvider } from './context/MarketingContext';
+import { AIMarketingProvider } from './context/AIMarketingContext';
 import MarketingManagement from './pages/MarketingManagement';
+import AIMarketingDashboard from './pages/AIMarketingDashboard';
+import AIMarketingCampaigns from './pages/AIMarketingCampaigns';
+import AILeadManagement from './pages/AILeadManagement';
 
 function App() {
   return (
@@ -67,6 +71,7 @@ function App() {
                 <QuoteProvider>
                   <WebmailProvider>
                     <MarketingProvider>
+                      <AIMarketingProvider>
                       <CartProvider>
                         <ManagementProvider>
                           <Router>
@@ -105,6 +110,9 @@ function App() {
                                   <Route path="/admin/factures" element={<InvoiceManagement />} />
                                   <Route path="/admin/webmail" element={<WebmailManagement />} />
                                   <Route path="/admin/marketing" element={<MarketingManagement />} />
+                                    <Route path="/admin/marketing-ia" element={<AIMarketingDashboard />} />
+                                    <Route path="/admin/marketing-ia/campagnes" element={<AIMarketingCampaigns />} />
+                                    <Route path="/admin/marketing-ia/leads" element={<AILeadManagement />} />
                                   <Route path="/finance" element={<Finance />} />
                                   <Route path="/finance/dashboard" element={<FinancialDashboard />} />
                                   <Route path="/finance/revenus" element={<RevenueManagement />} />
@@ -123,6 +131,7 @@ function App() {
                           </Router>
                         </ManagementProvider>
                       </CartProvider>
+                      </AIMarketingProvider>
                     </MarketingProvider>
                   </WebmailProvider>
                 </QuoteProvider>

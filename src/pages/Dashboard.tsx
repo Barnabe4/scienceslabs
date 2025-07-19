@@ -24,7 +24,8 @@ import {
   ChevronUp,
   BookOpen,
   Mail,
-  Megaphone
+  Megaphone,
+  Target
 } from 'lucide-react';
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
@@ -40,6 +41,9 @@ import AboutManagement from './AboutManagement';
 import TrainingManagement from './TrainingManagement';
 import BlogManagement from './BlogManagement';
 import WebmailManagement from './WebmailManagement';
+import AIMarketingDashboard from './AIMarketingDashboard';
+import AIMarketingCampaigns from './AIMarketingCampaigns';
+import AILeadManagement from './AILeadManagement';
 
 interface MenuItem {
   id: string;
@@ -77,6 +81,17 @@ const Dashboard: React.FC = () => {
     { id: 'blog', name: 'Blog', icon: FileText },
     { id: 'about', name: 'À propos', icon: Users },
     { id: 'webmail', name: 'Webmail', icon: Mail },
+    { 
+      id: 'marketing-ia', 
+      name: 'Marketing IA', 
+      icon: Megaphone,
+      hasSubmenu: true,
+      submenu: [
+        { id: 'marketing-ia-dashboard', name: 'Dashboard IA', icon: BarChart3 },
+        { id: 'marketing-ia-campaigns', name: 'Campagnes IA', icon: Target },
+        { id: 'marketing-ia-leads', name: 'Leads IA', icon: Users }
+      ]
+    },
     { 
       id: 'finance', 
       name: 'Finances', 
@@ -323,6 +338,28 @@ const Dashboard: React.FC = () => {
         return (
           <div className="space-y-6">
             <WebmailManagement />
+          </div>
+        );
+      
+      case 'marketing-ia':
+      case 'marketing-ia-dashboard':
+        return (
+          <div className="space-y-6">
+            <AIMarketingDashboard />
+          </div>
+        );
+      
+      case 'marketing-ia-campaigns':
+        return (
+          <div className="space-y-6">
+            <AIMarketingCampaigns />
+          </div>
+        );
+      
+      case 'marketing-ia-leads':
+        return (
+          <div className="space-y-6">
+            <AILeadManagement />
           </div>
         );
       
