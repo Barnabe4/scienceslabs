@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'scienceslabs-api',
-    script: './server/index.js',
+    script: './server/index.cjs',
     instances: process.env.NODE_ENV === 'production' ? 'max' : 1,
     exec_mode: process.env.NODE_ENV === 'production' ? 'cluster' : 'fork',
     env: {
