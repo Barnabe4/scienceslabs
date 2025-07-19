@@ -67,16 +67,16 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes API
 app.use('/api/auth', require('./routes/auth.cjs'));
-app.use('/api/products', require('./routes/products'));
-app.use('/api/categories', require('./routes/categories'));
-app.use('/api/orders', require('./routes/orders'));
-app.use('/api/customers', require('./routes/customers'));
-app.use('/api/quotes', require('./routes/quotes'));
-app.use('/api/payments', require('./routes/payments'));
-app.use('/api/support', require('./routes/support'));
-app.use('/api/marketing', require('./routes/marketing'));
-app.use('/api/analytics', require('./routes/analytics'));
-app.use('/api/admin', require('./routes/admin'));
+app.use('/api/products', require('./routes/products.cjs'));
+app.use('/api/categories', require('./routes/categories.cjs'));
+app.use('/api/orders', require('./routes/orders.cjs'));
+app.use('/api/customers', require('./routes/customers.cjs'));
+app.use('/api/quotes', require('./routes/quotes.cjs'));
+app.use('/api/payments', require('./routes/payments.cjs'));
+app.use('/api/support', require('./routes/support.cjs'));
+app.use('/api/marketing', require('./routes/marketing.cjs'));
+app.use('/api/analytics', require('./routes/analytics.cjs'));
+app.use('/api/admin', require('./routes/admin.cjs'));
 
 // Route de santé
 app.get('/api/health', (req, res) => {
