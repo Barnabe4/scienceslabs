@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Users, Plus, Search, Filter, Edit, Trash2, Eye, Shield, 
   Calendar, Clock, Activity, Settings, UserCheck, UserX,
-  ChevronDown, MoreHorizontal, Download, Upload
+  ChevronDown, MoreHorizontal, Download, Upload, AlertTriangle,
+  CheckCircle, X, Mail, Phone, MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -38,6 +39,11 @@ const UserManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [showActivityModal, setShowActivityModal] = useState(false);
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
+  const [showInactiveUsersModal, setShowInactiveUsersModal] = useState(false);
+  const [activityData, setActivityData] = useState<any[]>([]);
+  const [inactiveUsers, setInactiveUsers] = useState<User[]>([]);
 
   const [users, setUsers] = useState<User[]>([
     {
@@ -151,6 +157,85 @@ const UserManagement = () => {
       case 'inactive': return <UserX className="w-4 h-4 text-gray-600" />;
       case 'suspended': return <Shield className="w-4 h-4 text-red-600" />;
       default: return <Users className="w-4 h-4" />;
+    }
+  };
+
+  const handleViewActivity = () => {
+    // Simulation de données d'activité
+    const mockActivity = [
+      {
+        id: '1',
+        user: 'Marie Traoré',
+        action: 'Connexion',
+        module: 'Dashboard',
+        timestamp: '2024-01-20T15:30:00Z',
+        ipAddress: '192.168.1.100',
+        userAgent: 'Chrome 120.0.0.0'
+      },
+      {
+        id: '2',
+        user: 'Amadou Keita',
+        action: 'Modification commande',
+        module: 'Commandes',
+        timestamp: '2024-01-20T14:45:00Z',
+        ipAddress: '192.168.1.101',
+        userAgent: 'Firefox 121.0.0.0'
+      },
+      {
+        id: '3',
+        user: 'Administrateur Système',
+        action: 'Création utilisateur',
+        module: 'Utilisateurs',
+        timestamp: '2024-01-20T13:20:00Z',
+        ipAddress: '192.168.1.102',
+        userAgent: 'Chrome 120.0.0.0'
+      },
+      {
+        id: '4',
+        user: 'Directeur Général',
+        action: 'Consultation rapport',
+        module: 'Finances',
+        timestamp: '2024-01-20T12:15:00Z',
+        ipAddress: '192.168.1.103',
+        userAgent: 'Safari 17.0.0.0'
+      }
+    ];
+    setActivityData(mockActivity);
+    setShowActivityModal(true);
+  };
+
+  const handleSecuritySettings = () => {
+    setShowSecurityModal(true);
+  };
+
+  const handleInactiveUsers = () => {
+    // Filtrer les utilisateurs inactifs (pas de connexion depuis 30 jours)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const inactive = users.filter(user => {
+      if (!user.lastLogin) return true;
+      return new Date(user.lastLogin) < thirtyDaysAgo;
+    });
+    
+    setInactiveUsers(inactive);
+    setShowInactiveUsersModal(true);
+  };
+
+  const handleReactivateUser = (userId: number) => {
+    // Envoyer email de réactivation
+    const user = users.find(u => u.id === userId);
+    if (user) {
+      alert(`Email de réactivation envoyé à ${user.email}`);
+      // Mettre à jour le statut
+      handleStatusChange(userId, 'active');
+    }
+  };
+
+  const handleSuspendInactiveUser = (userId: number) => {
+    if (window.confirm('Êtes-vous sûr de vouloir suspendre cet utilisateur inactif ?')) {
+      handleStatusChange(userId, 'suspended');
+      setInactiveUsers(prev => prev.filter(u => u.id !== userId));
     }
   };
 
@@ -452,15 +537,18 @@ const UserManagement = () => {
               <p className="text-sm text-gray-600">Configurer les rôles et permissions</p>
             </div>
           </Link>
-          <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <button 
+            onClick={handleViewActivity}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
             <Activity className="w-8 h-8 text-green-600 mr-4" />
             <div>
               <h4 className="font-medium text-gray-900">Historique des connexions</h4>
               <p className="text-sm text-gray-600">Voir l'activité des utilisateurs</p>
             </div>
           </button>
-          <button 
-            onClick={() => alert('Fonctionnalité en cours de développement')}
+          <button
+            onClick={handleSecuritySettings}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Settings className="w-8 h-8 text-purple-600 mr-4" />
@@ -469,8 +557,297 @@ const UserManagement = () => {
               <p className="text-sm text-gray-600">Configurer la sécurité</p>
             </div>
           </button>
+          <button
+            onClick={handleInactiveUsers}
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <AlertTriangle className="w-8 h-8 text-orange-600 mr-4" />
+            <div>
+              <h4 className="font-medium text-gray-900">Utilisateurs inactifs</h4>
+              <p className="text-sm text-gray-600">Gérer les comptes inactifs</p>
+            </div>
+          </button>
         </div>
       </div>
+
+      {/* Modal Historique des Connexions */}
+      {showActivityModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <Activity className="w-6 h-6 mr-2 text-green-600" />
+                Historique des Connexions
+              </h2>
+              <button
+                onClick={() => setShowActivityModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="mb-4 flex items-center justify-between">
+                <div className="text-sm text-gray-600">
+                  Activité des dernières 24 heures
+                </div>
+                <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                  <Download className="w-4 h-4 mr-2" />
+                  Exporter
+                </button>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Utilisateur</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Module</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Heure</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {activityData.map((activity) => (
+                      <tr key={activity.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-4 text-sm font-medium text-gray-900">
+                          {activity.user}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-900">
+                          {activity.action}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-900">
+                          {activity.module}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500">
+                          {new Date(activity.timestamp).toLocaleString('fr-FR')}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500 font-mono">
+                          {activity.ipAddress}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Paramètres de Sécurité */}
+      {showSecurityModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <Settings className="w-6 h-6 mr-2 text-purple-600" />
+                Paramètres de Sécurité
+              </h2>
+              <button
+                onClick={() => setShowSecurityModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Politique des Mots de Passe</h3>
+                  <div className="space-y-3">
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" defaultChecked />
+                      <span className="ml-2 text-sm text-gray-700">Minimum 8 caractères</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" defaultChecked />
+                      <span className="ml-2 text-sm text-gray-700">Au moins une majuscule</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" />
+                      <span className="ml-2 text-sm text-gray-700">Au moins un caractère spécial</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" />
+                      <span className="ml-2 text-sm text-gray-700">Expiration tous les 90 jours</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Sessions et Connexions</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Durée de session (minutes)
+                      </label>
+                      <input
+                        type="number"
+                        defaultValue="480"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      />
+                    </div>
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" defaultChecked />
+                      <span className="ml-2 text-sm text-gray-700">Déconnexion automatique après inactivité</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" />
+                      <span className="ml-2 text-sm text-gray-700">Authentification à deux facteurs obligatoire</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Surveillance</h3>
+                  <div className="space-y-3">
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" defaultChecked />
+                      <span className="ml-2 text-sm text-gray-700">Enregistrer toutes les connexions</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" defaultChecked />
+                      <span className="ml-2 text-sm text-gray-700">Alertes de connexions suspectes</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input type="checkbox" className="h-4 w-4 text-purple-600 rounded" />
+                      <span className="ml-2 text-sm text-gray-700">Blocage automatique après 5 tentatives</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6 pt-6 border-t">
+                <button
+                  onClick={() => setShowSecurityModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => {
+                    alert('Paramètres de sécurité sauvegardés avec succès !');
+                    setShowSecurityModal(false);
+                  }}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  Sauvegarder
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Utilisateurs Inactifs */}
+      {showInactiveUsersModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+                <AlertTriangle className="w-6 h-6 mr-2 text-orange-600" />
+                Utilisateurs Inactifs ({inactiveUsers.length})
+              </h2>
+              <button
+                onClick={() => setShowInactiveUsersModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <div className="mb-4">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <AlertTriangle className="w-5 h-5 text-yellow-600 mr-2" />
+                    <span className="font-medium text-yellow-800">Attention</span>
+                  </div>
+                  <p className="text-yellow-700 text-sm mt-1">
+                    Ces utilisateurs n'ont pas de connexion enregistrée ou ne se sont pas connectés depuis plus de 30 jours.
+                  </p>
+                </div>
+              </div>
+              
+              {inactiveUsers.length === 0 ? (
+                <div className="text-center py-8">
+                  <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucun utilisateur inactif</h3>
+                  <p className="text-gray-600">Tous vos utilisateurs sont actifs et se connectent régulièrement.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {inactiveUsers.map((user) => (
+                    <div key={user.id} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+                            <span className="text-gray-600 font-bold text-sm">
+                              {user.name.charAt(0)}
+                            </span>
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">{user.name}</div>
+                            <div className="text-sm text-gray-500">{user.email}</div>
+                            <div className="text-xs text-gray-400">
+                              {user.lastLogin 
+                                ? `Dernière connexion: ${new Date(user.lastLogin).toLocaleDateString('fr-FR')}`
+                                : 'Jamais connecté'
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => handleReactivateUser(user.id)}
+                            className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors flex items-center"
+                          >
+                            <Mail className="w-3 h-3 mr-1" />
+                            Relancer
+                          </button>
+                          <button
+                            onClick={() => handleSuspendInactiveUser(user.id)}
+                            className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors"
+                          >
+                            Suspendre
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <div className="flex justify-center space-x-3 pt-4 border-t">
+                    <button
+                      onClick={() => {
+                        inactiveUsers.forEach(user => handleReactivateUser(user.id));
+                        setShowInactiveUsersModal(false);
+                      }}
+                      className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Relancer tous
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (window.confirm('Êtes-vous sûr de vouloir suspendre tous les utilisateurs inactifs ?')) {
+                          inactiveUsers.forEach(user => handleSuspendInactiveUser(user.id));
+                          setShowInactiveUsersModal(false);
+                        }
+                      }}
+                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      Suspendre tous
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
