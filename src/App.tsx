@@ -57,6 +57,9 @@ import MarketingManagement from './pages/MarketingManagement';
 import AIMarketingDashboard from './pages/AIMarketingDashboard';
 import AIMarketingCampaigns from './pages/AIMarketingCampaigns';
 import AILeadManagement from './pages/AILeadManagement';
+import CustomerSupportDashboard from './pages/CustomerSupportDashboard';
+import ChatbotBuilder from './pages/ChatbotBuilder';
+import { CustomerSupportProvider } from './context/CustomerSupportContext';
 
 function App() {
   return (
@@ -72,6 +75,7 @@ function App() {
                   <WebmailProvider>
                     <MarketingProvider>
                       <AIMarketingProvider>
+                        <CustomerSupportProvider>
                       <CartProvider>
                         <ManagementProvider>
                           <Router>
@@ -113,6 +117,8 @@ function App() {
                                     <Route path="/admin/marketing-ia" element={<AIMarketingDashboard />} />
                                     <Route path="/admin/marketing-ia/campagnes" element={<AIMarketingCampaigns />} />
                                     <Route path="/admin/marketing-ia/leads" element={<AILeadManagement />} />
+                                  <Route path="/admin/support" element={<CustomerSupportDashboard />} />
+                                  <Route path="/admin/support/chatbot" element={<ChatbotBuilder />} />
                                   <Route path="/finance" element={<Finance />} />
                                   <Route path="/finance/dashboard" element={<FinancialDashboard />} />
                                   <Route path="/finance/revenus" element={<RevenueManagement />} />
@@ -131,6 +137,7 @@ function App() {
                           </Router>
                         </ManagementProvider>
                       </CartProvider>
+                        </CustomerSupportProvider>
                       </AIMarketingProvider>
                     </MarketingProvider>
                   </WebmailProvider>

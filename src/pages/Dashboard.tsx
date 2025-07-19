@@ -27,6 +27,7 @@ import {
   Megaphone,
   Target
 } from 'lucide-react';
+import { Headphones, Bot } from 'lucide-react';
 import DashboardCharts from '../components/DashboardCharts';
 import OrderManagement from './OrderManagement';
 import Settings from './Settings';
@@ -44,6 +45,8 @@ import WebmailManagement from './WebmailManagement';
 import AIMarketingDashboard from './AIMarketingDashboard';
 import AIMarketingCampaigns from './AIMarketingCampaigns';
 import AILeadManagement from './AILeadManagement';
+import CustomerSupportDashboard from './CustomerSupportDashboard';
+import ChatbotBuilder from './ChatbotBuilder';
 
 interface MenuItem {
   id: string;
@@ -81,6 +84,16 @@ const Dashboard: React.FC = () => {
     { id: 'blog', name: 'Blog', icon: FileText },
     { id: 'about', name: 'À propos', icon: Users },
     { id: 'webmail', name: 'Webmail', icon: Mail },
+    { 
+      id: 'support', 
+      name: 'Relation Client & Support', 
+      icon: Headphones,
+      hasSubmenu: true,
+      submenu: [
+        { id: 'support-dashboard', name: 'Dashboard Support', icon: BarChart3 },
+        { id: 'support-chatbot', name: 'Chatbot IA', icon: Bot }
+      ]
+    },
     { 
       id: 'marketing-ia', 
       name: 'Marketing IA', 
@@ -360,6 +373,21 @@ const Dashboard: React.FC = () => {
         return (
           <div className="space-y-6">
             <AILeadManagement />
+          </div>
+        );
+      
+      case 'support':
+      case 'support-dashboard':
+        return (
+          <div className="space-y-6">
+            <CustomerSupportDashboard />
+          </div>
+        );
+      
+      case 'support-chatbot':
+        return (
+          <div className="space-y-6">
+            <ChatbotBuilder />
           </div>
         );
       
