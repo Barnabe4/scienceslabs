@@ -4,7 +4,8 @@ import { useCategories } from '../context/CategoryContext';
 import { 
   Package, Plus, Search, Filter, Edit, Trash2, Eye, Image, 
   AlertTriangle, CheckCircle, XCircle, ChevronDown, MoreHorizontal, 
-  Download, Upload, Printer, Tag, DollarSign, BarChart3, X
+  Download, Upload, Printer, Tag, DollarSign, BarChart3, X,
+  TrendingUp, TrendingDown
 } from 'lucide-react';
 
 interface Product {
