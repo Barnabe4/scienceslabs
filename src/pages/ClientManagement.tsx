@@ -288,6 +288,18 @@ const ClientManagement = () => {
     ));
   };
 
+  const handleManageDiscounts = () => {
+    setShowDiscountModal(true);
+  };
+
+  const handlePaymentDelays = () => {
+    setShowPaymentModal(true);
+  };
+
+  const handleInactiveClients = () => {
+    setShowInactiveModal(true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
